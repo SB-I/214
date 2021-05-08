@@ -1,0 +1,5 @@
+v.0.2.0
+** Adding "combat", add ability to communicate with server and all connected members in sector, as well as those in group not connected.
+
+v.0.1.0
+** Initial creation.
