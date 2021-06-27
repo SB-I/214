@@ -47,9 +47,11 @@ end);
 
 
 
-SBCI.Proxy.on("chat_msg", function(data)
-	--data = {name:string, msg:string, faction:integer};
+SBCI.Proxy.on("chat", function(data)
+	--data = {name:string, msg:string, faction:integer, channel:int};
 	local faction = data.faction or 0 -- for NameColor Devloping.
+	local channel = data.channel or 0; -- Channel posting.
+	local chatColor = SBCI.colors.channels[channel];
 
 	if faction and faction ~= 0 then
 		faction = SBCI.colors.faction[3]
@@ -57,9 +59,15 @@ SBCI.Proxy.on("chat_msg", function(data)
         faction = SBCI.colors.NORMAL
 	end
 
-	SBCI.print("<"..data.name..SBCI.colors.SBCI.."> "..data.msg, faction);
+	if channel and channel ~= 0 then
+		channel = SBC.channels[channel];
+	else
+		channel = SBCI.colors.SBCI;
+	end;
+
+	SBCI.print(channel.."<"..faction..data.name..chatColor.."> "..data.msg, chatColor);
 end);
-SBCI.Proxy.on("chat", function() return; end);
+--SBCI.Proxy.on("chat", function() return; end);
 
 
 --[[

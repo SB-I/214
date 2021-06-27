@@ -32,6 +32,12 @@ SBCI.colors.faction[1] = "\1276080FF"; --Itani
 SBCI.colors.faction[2] = "\127FF2020"; --Serco
 SBCI.colors.faction[3] = "\127C0C000"; --UIT
 
+SBCI.channels = {};
+SBCI.channels[0] = "";
+
+SBCI.colors.channels = {};
+SBCI.colors.channels[0] = SBCI.colors.SBCI;
+
 
 SBCI.SystemNames_ = {
 	{1,"Sol II",2},

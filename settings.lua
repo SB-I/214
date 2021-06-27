@@ -31,16 +31,10 @@ SBCI._Settings = function(type)
         SBCI.print("Running _Settings(\"load\") -- promise:resolve()", SBCI.colors.YELLOW)
 
         SBCI.print("Running _Settings(\"load\") = \""..spickle(SBCI.Settings.Data).."\"", SBCI.colors.YELLOW)]]
-        SBCI.print("Running _Settings(\"load\") -- promise", SBCI.colors.YELLOW)
-        if(SBCI.Settings.Data == "")then print("AGATW") end;
-        if(SBCI.Settings.Data == nil)then print("affff") end;
-        if(not SBCI.Settings.Data)then print("AGAnoooooTW") end;
         if(SBCI.Settings.Data)then printtable(SBCI.Settings.Data) end;
         if(SBCI.Settings.Data)then
-            SBCI.print("Running _Settings(\"load\") -- promise.resolve\n"..spickle(SBCI.Settings.Data), SBCI.colors.GREEN)
             promise:resolve();
         else
-            SBCI.print("Running _Settings(\"load\") -- promise.reject()", SBCI.colors.RED)
             promise.reject();
         end;
 
@@ -74,7 +68,6 @@ SBCI._Settings = function(type)
 		end;]]
 
     elseif(type=="save")then
-        SBCI.print("Running _Settings(\"save\")", SBCI.colors.YELLOW)
 
         SBCI.Settings.Data.Username = SBCI.Settings.st.Username.value or "";
         SBCI.Settings.Data.Password = SBCI.Settings.st.Password.value or "";
@@ -86,13 +79,8 @@ SBCI._Settings = function(type)
         --SBCI.Settings.Data.Spotter_HUD = SBCI.Settings.st.Spotter_HUD.value or "ON";
 
 
-        SBCI.print("Running _Settings(\"save\") -- saving", SBCI.colors.YELLOW)
         SBCI.debugprint("Saving Settings:\n"..spickle(SBCI.Settings.Data))
-        --SBCI.debugprint("Saving Settings:\n"..SBCI.Settings.Data)
-        SBCI.print("Running _Settings(\"save\") -- saving()", SBCI.colors.YELLOW)
         SaveSystemNotes(spickle(SBCI.Settings.Data), SBCI.Settings.SaveID);
-        --SaveSystemNotes(SBCI.Settings.Data, SBCI.Settings.SaveID);
-        SBCI.print("Running _Settings(\"save\") -- saved", SBCI.colors.YELLOW)
 		--return promise:resolve();
 
     else return; --[[Well... That wasn't a setting....]] end;

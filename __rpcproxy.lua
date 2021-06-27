@@ -247,13 +247,18 @@ Note: This function can also be used to reset an existing member's password.
     return p
 end]]
 
-SBCI.Proxy.sendChat = function(msg, sectorid, isemote)
+SBCI.Proxy.sendChat = function(msg, sectorid, isemote, ch)
+
+    if(not ch)then ch = 0 end;
+
     local params = {
         msg = msg,
         sectorid = sectorid,
-        isemote = isemote
-    }
-    return SBCI.Proxy._notify('send_chat', params)
+        isemote = isemote,
+        channel = ch
+    };
+    
+    return SBCI.Proxy._notify('chat', params)
 end
 
 --[[
