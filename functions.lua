@@ -12,7 +12,7 @@ end;
 SBCI.print = function(msg, color) --Print msg to VO-ChatBox.
     local color = color or "";
     if(color == "") then color = SBCI.colors.WHITE; end;
-    print(SBCI.colors.GREEN2.."(SBCI) "..color..msg);
+    print(SBCI.colors.SBCI.."(SBCI) "..color..msg);
 end;
 
 --Send msg to server/other pilots.

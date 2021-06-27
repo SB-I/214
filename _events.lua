@@ -83,16 +83,40 @@ end);
 	}
 ]]
 SBCI.Proxy.on("broadcast_spots", function(data)
-	for _, spot in ipairs(data.spots) do
-		local guild, faction, ship, name, sectorid;
-		if(not spot.sectorid)then return end; --No location, no spot.
-		if(not spot.name)then return end; --No name, no spot.
-		if(spot.guild ~= nil)then guild = "["..spot.guild.."] " else guild = "" end;
-		if(spot.ship ~= nil)then ship = spot.ship else ship = "" end;
-		if(spot.faction ~= nil)then faction = "{"..spot.faction.."}" else faction = "{-1}" end;
+	for _, player in ipairs(data['spots']) do
 
-		SBCI.print("Player Spotted: ["..spot.sectorid.."] "..guild..faction..spot.name.." in a "..ship, SBCI.colors.WHITE)
-	end;
+		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname
+        msg = "Player spotted: "
+        playerColor =  "";
+        locColor = SBCI.colors.YELLOW;
+        location = "";
+        name = player["name"]
+        faction = player["faction"]
+        sectorid = player["sectorid"]
+        guild = player['guild']
+        shipname = player["ship"]
+
+		if(name == nil or name == "")then return end; --Bad Spot.
+		if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
+
+		if(sectorid ~= nil) and (sectorid > 0)then
+			local alignment = SBCI.SystemNames_[GetSystemID(sectorid)][3];
+			locColor = SBCI.colors.faction[alignment] or SBCI.colors.SBCI;
+			location = "["..ShortLocationStr(sectorid).."]";
+		end;
+
+		if(faction ~= nil and faction>0)then playerColor = SBCI.colors.faction[faction];
+		else playerColor = SBCI.colors.NORMAL end;
+
+        if guild ~= nil and string.len(guild) > 0 then
+			guild = "["..guild.."]" end
+
+		if(shipname ~= nil) and (string.len(shipname) > 0)then
+			shipname = "Piloting "..Article(shipname)end;
+
+			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, SBCI.colors.WHITE, shipname);
+			SBCI.print(msg, SBCI.colors.WHITE)
+	end
 end);
 
 
