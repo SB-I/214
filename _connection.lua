@@ -8,7 +8,7 @@ SBCI.Connection = {}
 
 SBCI.Connection.isConnected = false
 SBCI.Connection.server = '25.27.158.232'
-SBCI.Connection.port = '13320'
+SBCI.Connection.port = '13320' --13320 --15220
 
 -- Connect to the SBCI server. This function does not perform authentication;
 -- only connecting to the TCP socket.
@@ -90,10 +90,23 @@ SBCI.Connection._Connect = function()
     SBCI.print("Connecting to SBCI server...", SBCI.colors.NORMAL);
     SBCI.Connection.connect()
     :next( function()--Once we've connected, Authenticate.
-        SBCI.print("Authenticating...", SBCI.colors.NORMAL);
         return SBCI.Proxy.authenticate(username, password, dpasswd)
-    end):next(function(data)--"connected" event.
-        SBCI.Events["authenticated"](data);
+    end):next( function(isAuthed)--true/false
+        if(isAuthed)then
+            SBCI.print(SBCI.colors.SBCI.."Authenticated.")
+            --return SBCI.Proxy.getRoles()
+        else
+            --SBCI.UpdateStatusLine(SBCI.colors.RED.."Connection Failed")
+            return Promise.reject("Authentication failed.")
+        end
+    --[[end):next( function(roles)
+        SBCI.debugprint('Available roles: ' .. spickle(roles) )
+        SBCI.Roles = roles
+        return SBCI.Proxy.getOnlineUsers()
+    end):next( function(onlineUsers)
+        SBCI.Events['login_info'](onlineUsers)
+        --if(SBCI.Settings.Data.BroadcastArrival == "ON")then SBCI.Proxy.broadcastArrival() end
+        SBCI.print(SBCI.colors.SBCI.."Connected!")]]
     end):catch( function(err)
         SBCI.print("Error connecting to SBCI server: "..err, SBCI.colors.RED)
     end)
