@@ -36,30 +36,49 @@ SBCI.Proxy.deliver = function(line)
     local status, errmsg = pcall(function()
         data = _json.decode(line)
     end)
-
     if not status then
         SBCI.debugprint('Could not decode incoming json: ' .. line)
         return
     end
-
-    if(data.method ~= nil)then
-        SBCI.debugprint('Incoming method: '..data.method);
+    if(data.result~=nil)then --Incoming is response to a recent TC3 request.
+        SBCI.debugprint('Received result from server.')
+        if(SBCI.Proxy.__openRpcRequests[data.id] == nil)then
+            SBCI.print("Unknown Request: ID:"..data.id..", Obj:"..data, SBCI.colors.RED)
+            return
+        end
+        local status, errMsg = pcall(function()
+            SBCI.Proxy.__openRpcRequests[data.id].promise:resolve(data.result)
+            -- Apparently, setting table value to "nil" is an acceptable way of
+            -- removing an item from a table based on the key value.
+            -- https://stackoverflow.com/questions/1758991/how-to-remove-a-lua-table-entry-by-its-key
+            SBCI.Proxy.__openRpcRequests[data.id] = nil;
+        end)
+        if status == false then
+            SBCI.print('ERROR calling result handler: '..errMsg, SBCI.colors.RED)
+            return
+        end
+    elseif data.method ~= nil then
+        -- Handle incoming TC3 RPC call. TODO : Must send result back to server
+        SBCI.debugprint('Handle incoming method call from server: '..data.method)
 
         local status, errMsg = pcall( function()
-            if(SBCI.Proxy.__eventHandlers[data.method])then
-                SBCI.Proxy.__eventHandlers[data.method](data.params);
-            else
-                SBCI.print("ERROR calling event: \""..data.method.."\". Exists??");
-            end;
-        end);
+            SBCI.Proxy.__eventHandlers[data.method](data.params)
+        end)
 
         if status == false then
-            SBCI.print("ERROR: Could not call event handler: "..errMsg, SBCI.colors.RED);
-        end;
-    else
-        --ToDo: Tell server no method.
-        return;
-    end;
+            SBCI.print("ERROR: Could not call event handler: "..errMsg, SBCI.colors.RED)
+        end
+
+    elseif data.error ~= nil then
+        -- Handle incoming TC3 RPC error
+        local status, errMsg = pcall(function()
+            SBCI.Proxy.__openRpcRequests[data.id].promise:reject(data.error.message)
+            SBCI.Proxy.__openRpcRequests[data.id] = nil
+        end)
+        if not status then
+            SBCI.print("Could not reject promise: " .. errMsg)
+        end
+    end
 end
 
 
@@ -257,7 +276,7 @@ SBCI.Proxy.sendChat = function(msg, sectorid, isemote, ch)
         isemote = isemote,
         channel = ch
     };
-    
+
     return SBCI.Proxy._notify('chat', params)
 end
 
