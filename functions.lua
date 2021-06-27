@@ -106,6 +106,20 @@ SBCI.EventPlayerEnteredGame = function(_, params)
 	SBCI.IsInitialised = true
 end
 
+-- Player enters station, rep/reload
+SBCI.EventEnteredStation = function()
+    if (HasActiveShip()) then
+        RepairShip(GetActiveShipID(), 1)
+    end
+    for p = 2, GetActiveShipNumAddonPorts()-1, 1 do
+        if GetInventoryItemName(GetActiveShipItemIDAtPort(p)) then
+            local current, maximum= GetAddonItemInfo(GetActiveShipItemIDAtPort(p))
+            if current < maximum then
+                ReplenishWeapon(GetActiveShipItemIDAtPort(p),maximum - current)
+            end
+        end
+    end
+end
 
 -- "Online Users" (Members connected to server.)
 SBCI.OnlineUsers = function(txt)

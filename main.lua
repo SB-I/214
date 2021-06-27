@@ -97,6 +97,7 @@ RegisterUserCommand("say_sbci", SBCI.SBCISay)
 
 --Register Events
 RegisterEvent(SBCI.EventPlayerEnteredGame, "PLAYER_ENTERED_GAME"); --Do initialize stuff..
+RegisterEvent(SBCI.EventEnteredStation, "ENTERED_STATION") --Used for Repair/Reload
 RegisterEvent(SBCI.CleanUp, "UNLOAD_INTERFACE") --ReloadInterface() or logout.
 --RegisterEvent(TCFT3.Trading.SubmitStation, "ENTERED_STATION")
 --RegisterEvent(TCFT3.Mining.EventTargetScanned, "TARGET_SCANNED")
