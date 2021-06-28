@@ -3,7 +3,7 @@ SBCI - General Use "Common"
 ]]
 
 --General Stuff;
-SBCI.debug = false;
+SBCI.debug = true;
 SBCI.Version = "0.2.0";
 SBCI.IsInitialised = false
 
@@ -11,8 +11,8 @@ SBCI.IsInitialised = false
 SBCI.colors = {};
 SBCI.colors.SBCI = "\12700b3b3";
 SBCI.colors.combat = "\127CD5C5C";
-SBCI.colors.YELLOW = "\127FFFF00";
-SBCI.colors.WHITE = "\127FFFFFF";
+SBCI.colors.yellow = "\127FFFF00";
+SBCI.colors.white = "\127FFFFFF";
 SBCI.colors.RED = "\127FF0000";
 
 SBCI.colors.GREEN = "\127008800";
@@ -20,10 +20,10 @@ SBCI.colors.GREEN2 = "\12733CC33";
 SBCI.colors.CHAT_BLUE = "\12728B4F0";
 SBCI.colors.NORMAL = "\127DDDDDD";
 SBCI.colors.ORANGE = "\127AAAA00";
-SBCI.colors.GUILD_ORANGE = "\127ffb935";
-SBCI.colors.INDIAN_RED = "\127CD5C5C";
+SBCI.colors.guildOrange = "\127ffb935";
+SBCI.colors.indianRed = "\127CD5C5C";
 SBCI.colors.BLUE = "\1270000FF";
-SBCI.colors.DRK_GREEN = "\127888800";
+SBCI.colors.darkGreen = "\127888800";
 
 
 SBCI.colors.faction = {};
@@ -34,9 +34,21 @@ SBCI.colors.faction[3] = "\127C0C000"; --UIT
 
 SBCI.channels = {};
 SBCI.channels[0] = "";
+SBCI.channels[1] = "(Council) ";
+SBCI.channels[2] = "(Officer) ";
 
 SBCI.colors.channels = {};
 SBCI.colors.channels[0] = SBCI.colors.SBCI;
+SBCI.colors.channels[1] = SBCI.colors.SBCI;
+SBCI.colors.channels[2] = SBCI.colors.SBCI;
+
+
+
+local colour_delimiter = "@"
+SBCI.colour_codes = {}
+for k,v in pairs(SBCI.colors) do
+    SBCI.colour_codes[colour_delimiter..k..colour_delimiter] = v
+end
 
 
 SBCI.SystemNames_ = {

@@ -4,7 +4,7 @@ SBCI.vokeys = {};
 function SBCI.vokeys.IssuingKeysCB(err,result)
     if err then
         if not (result == "That player already has that key.") then
-            vokeys.msg(vokeys.colors.WHITE,"Result: "..result)
+            vokeys.msg(vokeys.colors.white,"Result: "..result)
             end
         end
     end

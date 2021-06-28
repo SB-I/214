@@ -46,7 +46,7 @@ SBCI._.combat.SetTarget = function(_, data)
 	local msg ="say_group New Target: "..SBCI._.combat.CharID
     SBCI._.combat.TargetName = GetPlayerName(SBCI._.combat.CharID)
     SBCI._.combat.gkpc(msg)
-    SBCI.print("(Attack) Sending rally call against "..SBCI.colors.YELLOW..SBCI._.combat.TargetName,SBCI.colors.combat)
+    SBCI.print("(Attack) Sending rally call against "..SBCI.colors.yellow..SBCI._.combat.TargetName,SBCI.colors.combat)
     SBCI.Proxy._notify("order_attack", {type="newTarget", sectorID=GetCurrentSectorid(), myID=GetCharacterID(), targetID=SBCI._.combat.CharID});
 end
 
@@ -71,7 +71,7 @@ SBCI._.combat.CHAT_MSG_GROUP = function(_, data) --_="CHAT_MSG_GROUP";
     if (string.find(data["msg"],"New Target:")) then
 		_, _, SBCI._.combat.CharID = string.find(data["msg"], " (%d+)");
 		SBCI._.combat.TargetName = GetPlayerName(tonumber(SBCI._.combat.CharID))
-		SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.YELLOW..SBCI._.combat.TargetName,SBCI.colors.combat)
+		SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.yellow..SBCI._.combat.TargetName,SBCI.colors.combat)
 		SBCI._.combat.setradar(SBCI._.combat.NodeID, SBCI._.combat.ObjectID)
 	end
 
@@ -107,11 +107,11 @@ SBCI.Proxy.on("order_attack", function(data)
         end;
 
         if(not targetSync)then
-            SBCI.print("(Attack) "..SBCI.colors.WHITE..GetPlayerName(SBCI._.combat._.orderID)..SBCI.colors.combat.." requesting target: "..SBCI.colors.YELLOW..GetPlayerName(SBCI._.combat._.targetID).."\n* /a3 - YES",SBCI.colors.combat);
+            SBCI.print("(Attack) "..SBCI.colors.white..GetPlayerName(SBCI._.combat._.orderID)..SBCI.colors.combat.." requesting target: "..SBCI.colors.yellow..GetPlayerName(SBCI._.combat._.targetID).."\n* /a3 - YES",SBCI.colors.combat);
         else
             _, _, SBCI._.combat.CharID = string.find(data["msg"], " (%d+)");
             SBCI._.combat.TargetName = GetPlayerName(tonumber(SBCI._.combat.CharID))
-            SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.YELLOW..SBCI._.combat.TargetName,SBCI.colors.combat)
+            SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.yellow..SBCI._.combat.TargetName,SBCI.colors.combat)
             SBCI._.combat.setradar(SBCI._.combat.NodeID, SBCI._.combat.ObjectID)
         end;
 
@@ -130,7 +130,7 @@ SBCI.Proxy.on("order_attack", function(data)
     elseif(data.type == "rally")then
         --data = {type="rally", user:str, targetID=int, sectorID=int}
 ----<USER> is rallying with you against <TARGET> in <SECTOR_SHORT>
-        SBCI.print("(Attack) "..SBCI.colors.WHITE..data.user..SBCI.colors.combat.." is rallying with you against "..SBCI.colors.YELLOW..GetPlayerName(data.targetID)..SBCI.colors.combat.." in "..SBCI.colors.WHITE..ShortLocationStr(data.sectorID),SBCI.colors.combat);
+        SBCI.print("(Attack) "..SBCI.colors.white..data.user..SBCI.colors.combat.." is rallying with you against "..SBCI.colors.yellow..GetPlayerName(data.targetID)..SBCI.colors.combat.." in "..SBCI.colors.white..ShortLocationStr(data.sectorID),SBCI.colors.combat);
 
     else
         SBCI.print("(Attack) Unkown Attack Orders: \""..data.type.."\"",SBCI.colors.combat);
@@ -158,11 +158,11 @@ SBCI._.combat.SendJumpLocation = function(_, data)
 end
 
 SBCI._.combat.SendRally = function(_,data)
-    SBCI.print("(Attack) Joining the hunt against "..SBCI.colors.YELLOW..GetPlayerName(SBCI._.combat._.targetID),SBCI.colors.combat)
+    SBCI.print("(Attack) Joining the hunt against "..SBCI.colors.yellow..GetPlayerName(SBCI._.combat._.targetID),SBCI.colors.combat)
     SBCI.Proxy._notify("order_attack",{type="rally", leaderID=SBCI._.combat._.orderID, targetID=SBCI._.combat._.targetID, user=GetPlayerName(), sectorID=SBCI._.combat._.sectorID});
 
     SBCI._.combat.TargetName = GetPlayerName(tonumber(SBCI._.combat._.targetID))
-    SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.YELLOW..SBCI._.combat.TargetName,SBCI.colors.combat)
+    SBCI.print("(Attack) Targeted Player is: "..SBCI.colors.yellow..SBCI._.combat.TargetName,SBCI.colors.combat)
     --SBCI._.combat.NodeID, SBCI._.combat.ObjectID, SBCI._.combat.CharID = SBCI._.combat.TargetIDs(SBCI._.combat._.targetID)
     SBCI._.combat.CharID = SBCI._.combat._.targetID;
     SBCI._.combat.ReTarget();

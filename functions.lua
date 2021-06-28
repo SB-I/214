@@ -3,16 +3,20 @@
     Trying to keep main.lua Clean.
 ]]
 
+SBCI.colorise = function(msg)
+    return string.gsub(msg, "@%w+@", SBCI.colour_codes)
+end
+
 SBCI.debugprint = function(msg) --Print msg to VO-ChatBox only when debug is on.
     if SBCI.debug then
-        print(SBCI.colors.GREEN2.."(SBCI) Debug: "..SBCI.colors.YELLOW..msg);
+		print(SBCI.colorise("@GREEN2@(SBCI) Debug: @yellow@"..msg))
     end;
 end;
 
 SBCI.print = function(msg, color) --Print msg to VO-ChatBox.
     local color = color or "";
-    if(color == "") then color = SBCI.colors.WHITE; end;
-    print(SBCI.colors.SBCI.."(SBCI) "..color..msg);
+    if(color == "") then color = "@white@"; end;
+	print(SBCI.colorise("@SBCI@(SBCI) "..color..msg));
 end;
 
 --Send msg to server/other pilots.

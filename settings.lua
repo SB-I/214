@@ -10,12 +10,12 @@ SBCI.Settings.Data = {};
 	@param {String} type "Load" or "Save"
 ]]
 SBCI._Settings = function(type)
-    SBCI.print("Running _Settings()", SBCI.colors.YELLOW)
+    SBCI.print("Running _Settings()", SBCI.colors.yellow)
 	if not type then return end --We don't know what we're doing....
 	local promise = Promise.new()
 
     if(type=="load")then
-        SBCI.print("Running _Settings(\"load\")", SBCI.colors.YELLOW)
+        SBCI.print("Running _Settings(\"load\")", SBCI.colors.yellow)
         SBCI.Settings.Data = unspickle(LoadSystemNotes(SBCI.Settings.SaveID));
         --[[if(not SBCI.Settings.Data)then
             SBCI.debugprint("Settings not found; Creating Settings....");
@@ -25,12 +25,12 @@ SBCI._Settings = function(type)
                 SBCI.debugprint("Settings Created!")
             end);
         end;]]
-        --[[SBCI.print("Running _Settings(\"load\") -- Catches", SBCI.colors.YELLOW)
+        --[[SBCI.print("Running _Settings(\"load\") -- Catches", SBCI.colors.yellow)
         if(not SBCI.Settings.Data)then SBCI.print("NO SETTINGS FOUND",SBCI.colors.RED); end;
         if(SBCI.Settings.Data==nil)then SBCI.print("NO SETTINGS FOUND2",SBCI.colors.RED); end;
-        SBCI.print("Running _Settings(\"load\") -- promise:resolve()", SBCI.colors.YELLOW)
+        SBCI.print("Running _Settings(\"load\") -- promise:resolve()", SBCI.colors.yellow)
 
-        SBCI.print("Running _Settings(\"load\") = \""..spickle(SBCI.Settings.Data).."\"", SBCI.colors.YELLOW)]]
+        SBCI.print("Running _Settings(\"load\") = \""..spickle(SBCI.Settings.Data).."\"", SBCI.colors.yellow)]]
         if(SBCI.Settings.Data)then printtable(SBCI.Settings.Data) end;
         if(SBCI.Settings.Data)then
             promise:resolve();
