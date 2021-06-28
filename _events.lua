@@ -1,33 +1,3 @@
-SBCI.Events = SBCI.Events or {};
-
--- Error Occured Server-Side...
-SBCI.Proxy.on("error", function(data)
-	SBCI.print("Server Error proccessing request: \""..data.method.."\".\nError Message: \""..data.err.."\"")
-end);
-
--- Failed to login to the server.
-SBCI.Proxy.on("badcon", function(data)
-	SBCI.print("Server rejected connection with reason: "..data.reason);
-	SBCI.Connection.socket.tcp:Disconnect()
-end);
-
--- Logged into the server.
-SBCI.Proxy.on("authenticated", function(data)
-	--data = {roles=[], onlineUsers=[]};
-
-	if(data['onlineUsers'])then --Receiving list of logged in users
-		SBCI.OnlineUsers(data.onlineUsers);
-	end;
-
-	if(data['roles'])then
-		SBCI.Roles = table.concat(data.roles,", ")
-		SBCI.debugprint("Roles Given by server: "..SBCI.Roles)
-	end;
-end);
-
-
-
-
 
 SBCI.Proxy.on("broadcast_connect", function(data)
 	--data = {username:string};
@@ -35,6 +5,7 @@ SBCI.Proxy.on("broadcast_connect", function(data)
 	if(not username)then return end;
 	SBCI.print("*** "..username.." Logged in.",SBCI.colors.SBCI);
 end);
+
 
 SBCI.Proxy.on("broadcast_disconnect", function(data)
 	--data = {username:string};
@@ -44,10 +15,7 @@ SBCI.Proxy.on("broadcast_disconnect", function(data)
 end);
 
 
-
-
-
-SBCI.Proxy.on("chat", function(data)
+SBCI.Proxy.on("chat_msg", function(data)
 	--data = {name:string, msg:string, faction:integer, channel:int};
 	local faction = data.faction or 0 -- for NameColor Devloping.
 	local channel = data.channel or 0; -- Channel posting.
@@ -88,7 +56,7 @@ SBCI.Proxy.on("broadcast_spots", function(data)
 		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname
         msg = "Player spotted: "
         playerColor =  "";
-        locColor = SBCI.colors.YELLOW;
+        locColor = SBCI.colors.yellow;
         location = "";
         name = player["name"]
         faction = player["faction"]
@@ -114,8 +82,8 @@ SBCI.Proxy.on("broadcast_spots", function(data)
 		if(shipname ~= nil) and (string.len(shipname) > 0)then
 			shipname = "Piloting "..Article(shipname)end;
 
-			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, SBCI.colors.WHITE, shipname);
-			SBCI.print(msg, SBCI.colors.WHITE)
+			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, SBCI.colors.white, shipname);
+			SBCI.print(msg, SBCI.colors.white)
 	end
 end);
 
@@ -178,12 +146,12 @@ end);
 SBCI.Proxy.on("server_notice", function(data)
 	--data = {msg:string};
 
-	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.WHITE.."> "..SBCI.colors.SBCI..data.msg, SBCI.colors.WHITE);
+	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.white.."> "..SBCI.colors.SBCI..data.msg, SBCI.colors.white);
 end);
 
 
 SBCI.Proxy.on("server_attacked_stations", function(data)
 	--data = {msg:string};
 
-	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.WHITE.."> "..SBCI.colors.INDIAN_RED..data.msg, SBCI.colors.WHITE);
+	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.white.."> "..SBCI.colors.indianRed..data.msg, SBCI.colors.white);
 end);

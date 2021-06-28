@@ -91,10 +91,18 @@ SBCI.Connection._Connect = function()
     SBCI.Connection.connect()
     :next( function()--Once we've connected, Authenticate.
         return SBCI.Proxy.authenticate(username, password, dpasswd)
-    end):next( function(isAuthed)--true/false
-        if(isAuthed)then
+    end):next( function(data)--{roles:<Array>, onlineUsers:str}
+        if(data)then
             SBCI.print(SBCI.colors.SBCI.."Authenticated.")
-            --return SBCI.Proxy.getRoles()
+
+            if(data['onlineUsers'])then --Receiving list of logged in users
+                SBCI.OnlineUsers(data.onlineUsers);
+            end;
+
+            if(data['roles'])then
+                SBCI.Roles = data.roles;
+                SBCI.debugprint("Roles Given by server: "..SBCI.Roles)
+            end;
         else
             --SBCI.UpdateStatusLine(SBCI.colors.RED.."Connection Failed")
             return Promise.reject("Authentication failed.")

@@ -81,6 +81,21 @@ SBCI.tableSize = function(table)
     return count
 end
 
+--[[
+	Iterate through the table and check if it has a specific value.
+	@param {Table} tbl - Table to loo kthrough.
+	@param {String|Bool|Int} value - value to search for.
+	@returns {Boolean} True if the {value} exists within {tbl}, false f it does not.
+]]
+SBCI.tableHasValue = function(tbl, value)
+    for k, v in ipairs(tbl) do -- iterate table (for sequential tables only)
+        if v == value then
+            return true -- Found in this or nested table
+        end
+    end
+    return false -- Not found
+end
+
 -- create random string for password
 function SBCI.RandomString(length)
 	if length < 1 then return nil end
