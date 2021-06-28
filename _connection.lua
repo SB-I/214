@@ -7,7 +7,7 @@ Version 1.0
 SBCI.Connection = {}
 
 SBCI.Connection.isConnected = false
-SBCI.Connection.server = '25.27.158.232'
+SBCI.Connection.server = '73.12.155.103'--73.12.155.103 --25.27.158.232
 SBCI.Connection.port = '13320' --13320 --15220
 
 -- Connect to the SBCI server. This function does not perform authentication;
@@ -39,7 +39,7 @@ SBCI.Connection.connect = function()
     end
 
     local function onDisconnect(socket)
-        SBCI.print("SBCI Server disconnected.", SBCI.colors.YELLOW)
+        SBCI.print("SBCI Server disconnected.", SBCI.colors.yellow)
         SBCI.Connection.isConnected = false
     end
 
@@ -63,7 +63,7 @@ end
 
 SBCI.Connection.CleanUp = function()
     if SBCI.Connection.isConnected then
-        SBCI.print("Disconnecting from server.", SBCI.colors.WHITE)
+        SBCI.print("Disconnecting from server.", SBCI.colors.white)
         --SBCI.Proxy.logout();
         SBCI.Connection.socket.tcp:Disconnect()
         SBCI.Connection.isConnected = false
@@ -107,7 +107,7 @@ SBCI.Connection._Connect = function()
         SBCI.Events['login_info'](onlineUsers)
         --if(SBCI.Settings.Data.BroadcastArrival == "ON")then SBCI.Proxy.broadcastArrival() end
         SBCI.print(SBCI.colors.SBCI.."Connected!")]]
-    end):catch( function(err)
-        SBCI.print("Error connecting to SBCI server: "..err, SBCI.colors.RED)
+    end):catch( function(error)
+        SBCI.print("Error connecting to SBCI server: "..error, SBCI.colors.indianRed)
     end)
 end;
