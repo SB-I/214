@@ -71,12 +71,16 @@ SBCI.Proxy.deliver = function(line)
 
     elseif data.error ~= nil then
         -- Handle incoming TC3 RPC error
-        local status, errMsg = pcall(function()
-            SBCI.Proxy.__openRpcRequests[data.id].promise:reject(data.error.message)
-            SBCI.Proxy.__openRpcRequests[data.id] = nil
-        end)
-        if not status then
-            SBCI.print("Could not reject promise: " .. errMsg)
+        if(data.id ~= nil)then
+            local status, errMsg = pcall(function()
+                SBCI.Proxy.__openRpcRequests[data.id].promise:reject(data.error.message)
+                SBCI.Proxy.__openRpcRequests[data.id] = nil
+            end)
+            if not status then
+                SBCI.print("Could not reject promise: " .. errMsg)
+            end
+        else
+            SBCI.print("@indianRed@Incoming Server Error: @white@"..data.error.code.." - "..data.error.message)
         end
     end
 end
