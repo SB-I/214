@@ -80,14 +80,17 @@ SBCI.Commands = function(_, args)
         elseif(cmd == "debug")then
             if(SBCI.debug)then SBCI.debug = false;
             else SBCI.debug = true end;
-            SBCI.print("> SBCI.debug = "..tostring(SBCI.debug), SBCI.colors.YELLOW);
+            SBCI.print("@yellow@> SBCI.debug = "..tostring(SBCI.debug));
 
         elseif(cmd=="reload")then
             SBCI.CleanUp();
             ReloadInterface();
+
+        else
+            SBCI.print("Unknown Command \"@yellow@"..cmd.."@white@\"")
         end;
     else
-        --Help ??
+        SBCI.print("Help (Coming Soon(tm)!!)")
     end;
 end;
 
