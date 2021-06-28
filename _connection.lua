@@ -101,7 +101,7 @@ SBCI.Connection._Connect = function()
 
             if(data['roles'])then
                 SBCI.Roles = data.roles;
-                SBCI.debugprint("Roles Given by server: "..SBCI.Roles)
+                SBCI.debugprint("Roles Given by server: "..table.concat(SBCI.Roles,", "))
             end;
         else
             --SBCI.UpdateStatusLine(SBCI.colors.RED.."Connection Failed")
