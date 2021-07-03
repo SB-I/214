@@ -3,8 +3,8 @@ TBS - General Use "Common"
 ]]
 
 --General Stuff;
-TBS.debug = true;
-TBS.Version = "0.2.0";
+TBS.debug = false;
+TBS.Version = "0.2.2";
 TBS.IsInitialised = false
 
 -- Hex color codes "\127RRGGBB" format
