@@ -15,10 +15,10 @@ TBS.colors.yellow = "\127FFFF00";
 TBS.colors.white = "\127FFFFFF";
 TBS.colors.RED = "\127FF0000";
 
-TBS.colors.GREEN = "\127008800";
-TBS.colors.GREEN2 = "\12733CC33";
+TBS.colors.green = "\127008800";
+TBS.colors.green2 = "\12733CC33";
 TBS.colors.CHAT_BLUE = "\12728B4F0";
-TBS.colors.NORMAL = "\127DDDDDD";
+TBS.colors.normal = "\127DDDDDD";
 TBS.colors.ORANGE = "\127AAAA00";
 TBS.colors.guildOrange = "\127ffb935";
 TBS.colors.indianRed = "\127CD5C5C";
@@ -42,6 +42,14 @@ TBS.colors.channels[0] = TBS.colors.TBS;
 TBS.colors.channels[1] = TBS.colors.TBS;
 TBS.colors.channels[2] = TBS.colors.TBS;
 
+TBS.standings = {};
+TBS.standings[-5] = "@white@Bot";
+TBS.standings[-2] = "@combat@KoS";
+TBS.standings[1] = "@indianRed@Caution";
+TBS.standings[0] = "@normal@Neutral";
+TBS.standings[1] = "@green@Respected";
+TBS.standings[2] = "@TBS@Ally";
+TBS.standings[3] = "@TBS@Guildie";
 
 
 local colour_delimiter = "@"

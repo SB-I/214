@@ -220,8 +220,10 @@ Expected params:
 
 ]]
 TBS.Proxy.playersSpotted = function(params)
-    TBS.Proxy._request('players_spotted', params)
-    :next(function(kosList) -- kosLis = [{ name=str, faction=int, reason=str }]
+    TBS.Proxy._notify('players_spotted', params)
+    --[[:next(function(kosList) -- kosLis = [{ name=str, faction=int, reason=str }]
+	    if(kosList == false)then return end -- No KoS's were found.
+
         for _, player in ipairs(kosList) do
             if(not player['name']) then return end;
             local faction = "";
@@ -229,11 +231,11 @@ TBS.Proxy.playersSpotted = function(params)
                 faction = TBS.colors.faction[0]
             else
                 faction = TBS.colors.faction[player['faction']]
-            end
+    --[[        end
 
             TBS.print('@white@The pilot '..faction..player['name']..' @white@is KoS to [214] for: @yellow@'..player['reason']);
         end
-    end)
+    end)]]
 end
 
 --[[

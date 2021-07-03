@@ -87,7 +87,7 @@ TBS.Connection._Connect = function()
         gkini.WriteString("SpyaBeje Industries", "idstring", dpasswd);
     end;
 
-    TBS.print("Connecting to TBS server...", TBS.colors.NORMAL);
+    TBS.print("Connecting to TBS server...", TBS.colors.normal);
     TBS.Connection.connect()
     :next( function()--Once we've connected, Authenticate.
         return TBS.Proxy.authenticate(username, password, dpasswd)

@@ -9,7 +9,7 @@ end
 
 TBS.debugprint = function(msg) --Print msg to VO-ChatBox only when debug is on.
     if TBS.debug then
-		print(TBS.colorise("@GREEN2@(TBS) Debug: @yellow@"..msg))
+		print(TBS.colorise("@green2@(TBS) Debug: @yellow@"..msg))
     end;
 end;
 

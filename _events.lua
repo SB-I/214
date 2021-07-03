@@ -24,7 +24,7 @@ TBS.Proxy.on("chat_msg", function(data)
 	if faction and faction ~= 0 then
 		faction = TBS.colors.faction[3]
 	else
-        faction = TBS.colors.NORMAL
+        faction = TBS.colors.normal
 	end
 
 	if channel and channel ~= 0 then
@@ -51,9 +51,9 @@ end);
 	}
 ]]
 TBS.Proxy.on("playersSpotted", function(data)
-	for _, player in ipairs(data['spots']) do
+	for _, player in ipairs(data['players']) do
 
-		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname
+		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname, status
         msg = "Player spotted: "
         playerColor =  "";
         locColor = TBS.colors.yellow;
@@ -63,9 +63,12 @@ TBS.Proxy.on("playersSpotted", function(data)
         sectorid = player["sectorID"]
         guild = player['guild']
         shipname = player["ship"]
+		status = player['status'] or 0;
 
 		if(name == nil or name == "")then return end; --Bad Spot.
-		if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
+		if(not TBS.debug)then
+			if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
+		end;
 
 		if(sectorid ~= nil) and (sectorid > 0)then
 			local alignment = TBS.SystemNames_[GetSystemID(sectorid)][3];
@@ -74,15 +77,20 @@ TBS.Proxy.on("playersSpotted", function(data)
 		end;
 
 		if(faction ~= nil and faction>0)then playerColor = TBS.colors.faction[faction];
-		else playerColor = TBS.colors.NORMAL end;
+		else playerColor = TBS.colors.normal end;
 
         if guild ~= nil and string.len(guild) > 0 then
-			guild = "["..guild.."]" end
+			guild = "["..guild.."]"
+		end
 
 		if(shipname ~= nil) and (string.len(shipname) > 0)then
 			shipname = "Piloting "..Article(shipname)end;
 
-			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, TBS.colors.white, shipname);
+		if(status ~= nil) and (TBS.standings[status])then
+			status = " - "..TBS.standings[status]
+		end
+
+			msg = string.format("%s%s%s %s%s%s %s%s%s", msg, locColor, location, playerColor, guild, name, TBS.colors.white, shipname, status);
 			TBS.print(msg, TBS.colors.white)
 	end
 end);

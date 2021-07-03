@@ -91,7 +91,7 @@ TBS.LastSeen.CheckNotify = function()
 			if (n.label==nil) then
 				n.label = iup.label{title=n.txt, font=Font.H3*HUD_SCALE, alignment="ACENTER", expand="HORIZONTAL"}
 				iup.Append(TBS.LastSeen.NotifyBox, n.label)
-                --TBS.AddStatus(TBS.colors.GREEN2 .. "(TBS) " .. n.txt, true)
+                --TBS.AddStatus(TBS.colors.green2 .. "(TBS) " .. n.txt, true)
                 TBS.print(n.txt)
 			end
 		end
