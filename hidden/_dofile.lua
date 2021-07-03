@@ -1,4 +1,4 @@
-SBCI._ = SBCI._ or {}; --"hidden";
+TBS._ = TBS._ or {}; --"hidden";
 
 --dofile("hidden/_.lua");
 dofile("hidden/combat.lua");

@@ -1,7 +1,7 @@
 
-SBCI.UI = {}
+TBS.UI = {}
 
-SBCI.UI.createOkCancelDialog = function(header, childContents, onOk, onCancel)
+TBS.UI.createOkCancelDialog = function(header, childContents, onOk, onCancel)
     if(header)then
         iup.vbox{ iup.label{title = header}, iup.fill{size=3} };
     else
@@ -29,14 +29,14 @@ SBCI.UI.createOkCancelDialog = function(header, childContents, onOk, onCancel)
     }
     -- If we are not in a station, we need to do some special stuff to the dialog
     if PlayerInStation() then
-        SBCI.debugprint("Creating in-station dialog...")
+        TBS.debugprint("Creating in-station dialog...")
         local dialog = iup.dialog{
             container,
             modal="YES"
         }
         return dialog
     else
-        SBCI.debugprint("Creating out-of-station dialog...")
+        TBS.debugprint("Creating out-of-station dialog...")
         local dialog = iup.dialog{
             iup.stationhighopacityframe{
                 iup.stationhighopacityframebg{
@@ -51,7 +51,7 @@ SBCI.UI.createOkCancelDialog = function(header, childContents, onOk, onCancel)
     end
 end
 
-SBCI.UI.createMessageDialog = function(title, message)
+TBS.UI.createMessageDialog = function(title, message)
     local dialog = {}
     local container = iup.vbox{
         iup.label{title=title},

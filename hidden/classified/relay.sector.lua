@@ -1,6 +1,6 @@
-SBCI._._.relay = SBCI._._.relay or {}; --This feature.
+TBS._._.relay = TBS._._.relay or {}; --This feature.
 
-SBCI._._.relay.onEvent = function(event, data)
+TBS._._.relay.onEvent = function(event, data)
     local params = {};
         params.msg = data.msg;
         params.emote = false;
@@ -23,9 +23,9 @@ SBCI._._.relay.onEvent = function(event, data)
     end;
 
     if(not params.msg or params.msg=="")then return end;
-    SBCI.Proxy.RelayChat(params);
+    TBS.Proxy.RelayChat(params);
 end;
 
 
-RegisterEvent(SBCI._._.relay.onEvent,"CHAT_MSG_SECTOR");
-RegisterEvent(SBCI._._.relay.onEvent,"CHAT_MSG_SECTOR_EMOTE");
+RegisterEvent(TBS._._.relay.onEvent,"CHAT_MSG_SECTOR");
+RegisterEvent(TBS._._.relay.onEvent,"CHAT_MSG_SECTOR_EMOTE");

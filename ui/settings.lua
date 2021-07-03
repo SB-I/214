@@ -1,32 +1,32 @@
-SBCI.UISettings = {};
+TBS.UISettings = {};
 
 
-function SBCI.UISettings:createUI()
+function TBS.UISettings:createUI()
     local container, dialog;
     local p = Promise.new();
 
     --Our settings.
-    SBCI.Settings.st = {};
+    TBS.Settings.st = {};
     local _s = function(state) state = (state==1 and "ON") or "OFF"; return state end;
-    -- action=function(self,state) -SBCI.Settings.Data.SETTING_NAME = _s(state) end;
+    -- action=function(self,state) -TBS.Settings.Data.SETTING_NAME = _s(state) end;
 
-    SBCI.Settings.st.Username = iup.text { value="", expand="YES", size="200x" };
-    SBCI.Settings.st.Password = iup.text { value="", expand="YES", size="200x", password="YES" };
-    SBCI.Settings.st.AutoLogin = iup.stationtoggle{ value="ON", title="AutoLogin",
-        action=function(self,state) SBCI.Settings.Data.AutoLogin = _s(state) end; };
-    --SBCI.Settings.st.BroadcastArrival = iup.stationtoggle{ value="ON", title="Broadcast Arrival",
-        --action=function(self,state) SBCI.Settings.Data.BroadcastArrival = _s(state) end; };
-    SBCI.Settings.st.SendLocation = iup.stationtoggle{ value="ON", title="Send Location",
-        action=function(self,state) SBCI.Settings.Data.SendLocation = _s(state) end; };
-    --SBCI.Settings.st.AutoRepair = iup.stationtoggle{ value="ON", title="Auto Repair",
-        --action=function(self,state) SBCI.Settings.Data.AutoRepair = _s(state) end; };
-    --SBCI.Settings.st.AutoReload = iup.stationtoggle{ value="ON", title="Auto Reload",
-        --action=function(self,state) SBCI.Settings.Data.AutoReload = _s(state) end; };
-    --SBCI.Settings.st.Spotter_HUD = iup.stationtoggle{ value="ON", title="Spotter - HUD",
-        --action=function(self,state) SBCI.Settings.Data.Spotter_HUD = _s(state) end; };
+    TBS.Settings.st.Username = iup.text { value="", expand="YES", size="200x" };
+    TBS.Settings.st.Password = iup.text { value="", expand="YES", size="200x", password="YES" };
+    TBS.Settings.st.AutoLogin = iup.stationtoggle{ value="ON", title="AutoLogin",
+        action=function(self,state) TBS.Settings.Data.AutoLogin = _s(state) end; };
+    --TBS.Settings.st.BroadcastArrival = iup.stationtoggle{ value="ON", title="Broadcast Arrival",
+        --action=function(self,state) TBS.Settings.Data.BroadcastArrival = _s(state) end; };
+    TBS.Settings.st.SendLocation = iup.stationtoggle{ value="ON", title="Send Location",
+        action=function(self,state) TBS.Settings.Data.SendLocation = _s(state) end; };
+    --TBS.Settings.st.AutoRepair = iup.stationtoggle{ value="ON", title="Auto Repair",
+        --action=function(self,state) TBS.Settings.Data.AutoRepair = _s(state) end; };
+    --TBS.Settings.st.AutoReload = iup.stationtoggle{ value="ON", title="Auto Reload",
+        --action=function(self,state) TBS.Settings.Data.AutoReload = _s(state) end; };
+    --TBS.Settings.st.Spotter_HUD = iup.stationtoggle{ value="ON", title="Spotter - HUD",
+        --action=function(self,state) TBS.Settings.Data.Spotter_HUD = _s(state) end; };
 
 
-    --SBCI.Settings.Help = iup.label{ title="[button]HELP ME!!!!!![/button_LOL]" }
+    --TBS.Settings.Help = iup.label{ title="[button]HELP ME!!!!!![/button_LOL]" }
 
     container = iup.vbox{
         iup.hbox{
@@ -35,33 +35,33 @@ function SBCI.UISettings:createUI()
         },
         iup.vbox{
             gap="2",
-            iup.hbox{ iup.label{ title="Username:"}, SBCI.Settings.st.Username },
-            iup.hbox{ iup.label{ title="Password:"}, SBCI.Settings.st.Password },
+            iup.hbox{ iup.label{ title="Username:"}, TBS.Settings.st.Username },
+            iup.hbox{ iup.label{ title="Password:"}, TBS.Settings.st.Password },
             iup.fill{ size="5" },
-            SBCI.Settings.st.AutoLogin,
-            --SBCI.Settings.st.BroadcastArrival,
-            SBCI.Settings.st.SendLocation,
-            --SBCI.Settings.st.AutoRepair,
-            --SBCI.Settings.st.AutoReload,
-            --SBCI.Settings.st.Spotter_HUD,
+            TBS.Settings.st.AutoLogin,
+            --TBS.Settings.st.BroadcastArrival,
+            TBS.Settings.st.SendLocation,
+            --TBS.Settings.st.AutoRepair,
+            --TBS.Settings.st.AutoReload,
+            --TBS.Settings.st.Spotter_HUD,
             iup.fill{ size="5" },
-            --SBCI.Settings.Help
+            --TBS.Settings.Help
         }
     };
 
-    dialog = SBCI.UI.createOkCancelDialog(
+    dialog = TBS.UI.createOkCancelDialog(
         nil,--Blank...
         container,
 
         function() --"OK"
-            SBCI.debugprint("SettingsDialog: OK...");
+            TBS.debugprint("SettingsDialog: OK...");
 
-            SBCI._Settings("save");
+            TBS._Settings("save");
             HideDialog(dialog);
         end,
 
         function() --"CANCEL"
-            SBCI.debugprint("SettingsDialog: Cancel...");
+            TBS.debugprint("SettingsDialog: Cancel...");
             HideDialog(dialog);
         end
 
@@ -71,7 +71,7 @@ function SBCI.UISettings:createUI()
     return p;
 end;
 
-function SBCI.UISettings:showDialog()
+function TBS.UISettings:showDialog()
     local fut_dialog = self:createUI()
     self:updateUI();
     fut_dialog:next( function(dialog)
@@ -79,15 +79,15 @@ function SBCI.UISettings:showDialog()
     end)
 end
 
-function SBCI.UISettings.updateUI()
+function TBS.UISettings.updateUI()
 
-    SBCI.Settings.st.Username.value = SBCI.Settings.Data.Username or "";
-    SBCI.Settings.st.Password.value = SBCI.Settings.Data.Password or "";
-    SBCI.Settings.st.AutoLogin.value = SBCI.Settings.Data.AutoLogin or "ON";
-    --SBCI.Settings.st.BroadcastArrival.value = SBCI.Settings.Data.BroadcastArrival or "ON";
-    SBCI.Settings.st.SendLocation.value = SBCI.Settings.Data.SendLocation or "ON"
-    --SBCI.Settings.st.AutoRepair.value = SBCI.Settings.Data.AutoRepair or "ON";
-    --SBCI.Settings.st.AutoReload.value = SBCI.Settings.Data.AutoReload or "ON";
-    --SBCI.Settings.st.Spotter_HUD.value = SBCI.Settings.Data.Spotter_HUD or "ON";
-    ----SBCI.Settings.st.ShowPDAButtons.value = SBCI.Settings.Data.ShowPDAButtons or "ON";
+    TBS.Settings.st.Username.value = TBS.Settings.Data.Username or "";
+    TBS.Settings.st.Password.value = TBS.Settings.Data.Password or "";
+    TBS.Settings.st.AutoLogin.value = TBS.Settings.Data.AutoLogin or "ON";
+    --TBS.Settings.st.BroadcastArrival.value = TBS.Settings.Data.BroadcastArrival or "ON";
+    TBS.Settings.st.SendLocation.value = TBS.Settings.Data.SendLocation or "ON"
+    --TBS.Settings.st.AutoRepair.value = TBS.Settings.Data.AutoRepair or "ON";
+    --TBS.Settings.st.AutoReload.value = TBS.Settings.Data.AutoReload or "ON";
+    --TBS.Settings.st.Spotter_HUD.value = TBS.Settings.Data.Spotter_HUD or "ON";
+    ----TBS.Settings.st.ShowPDAButtons.value = TBS.Settings.Data.ShowPDAButtons or "ON";
 end;

@@ -1,41 +1,41 @@
 
-SBCI.Proxy.on("broadcast_connect", function(data)
+TBS.Proxy.on("broadcast_connect", function(data)
 	--data = {username:string};
 	local username = data.username;
 	if(not username)then return end;
-	SBCI.print("*** "..username.." Logged in.",SBCI.colors.SBCI);
+	TBS.print("*** "..username.." Logged in.",TBS.colors.TBS);
 end);
 
 
-SBCI.Proxy.on("broadcast_disconnect", function(data)
+TBS.Proxy.on("broadcast_disconnect", function(data)
 	--data = {username:string};
 	local username = data.username;
 	if(not username)then return end;
-	SBCI.print("*** "..username.." Logged out.",SBCI.colors.SBCI);
+	TBS.print("*** "..username.." Logged out.",TBS.colors.TBS);
 end);
 
 
-SBCI.Proxy.on("chat_msg", function(data)
+TBS.Proxy.on("chat_msg", function(data)
 	--data = {name:string, msg:string, faction:integer, channel:int};
 	local faction = data.faction or 0 -- for NameColor Devloping.
 	local channel = data.channel or 0; -- Channel posting.
-	local chatColor = SBCI.colors.channels[channel];
+	local chatColor = TBS.colors.channels[channel];
 
 	if faction and faction ~= 0 then
-		faction = SBCI.colors.faction[3]
+		faction = TBS.colors.faction[3]
 	else
-        faction = SBCI.colors.NORMAL
+        faction = TBS.colors.NORMAL
 	end
 
 	if channel and channel ~= 0 then
 		channel = SBC.channels[channel];
 	else
-		channel = SBCI.colors.SBCI;
+		channel = TBS.colors.TBS;
 	end;
 
-	SBCI.print(channel.."<"..faction..data.name..chatColor.."> "..data.msg, chatColor);
+	TBS.print(channel.."<"..faction..data.name..chatColor.."> "..data.msg, chatColor);
 end);
---SBCI.Proxy.on("chat", function() return; end);
+--TBS.Proxy.on("chat", function() return; end);
 
 
 --[[
@@ -50,17 +50,17 @@ end);
 		]
 	}
 ]]
-SBCI.Proxy.on("broadcast_spots", function(data)
+TBS.Proxy.on("playersSpotted", function(data)
 	for _, player in ipairs(data['spots']) do
 
 		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname
         msg = "Player spotted: "
         playerColor =  "";
-        locColor = SBCI.colors.yellow;
+        locColor = TBS.colors.yellow;
         location = "";
         name = player["name"]
         faction = player["faction"]
-        sectorid = player["sectorid"]
+        sectorid = player["sectorID"]
         guild = player['guild']
         shipname = player["ship"]
 
@@ -68,13 +68,13 @@ SBCI.Proxy.on("broadcast_spots", function(data)
 		if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
 
 		if(sectorid ~= nil) and (sectorid > 0)then
-			local alignment = SBCI.SystemNames_[GetSystemID(sectorid)][3];
-			locColor = SBCI.colors.faction[alignment] or SBCI.colors.SBCI;
+			local alignment = TBS.SystemNames_[GetSystemID(sectorid)][3];
+			locColor = TBS.colors.faction[alignment] or TBS.colors.TBS;
 			location = "["..ShortLocationStr(sectorid).."]";
 		end;
 
-		if(faction ~= nil and faction>0)then playerColor = SBCI.colors.faction[faction];
-		else playerColor = SBCI.colors.NORMAL end;
+		if(faction ~= nil and faction>0)then playerColor = TBS.colors.faction[faction];
+		else playerColor = TBS.colors.NORMAL end;
 
         if guild ~= nil and string.len(guild) > 0 then
 			guild = "["..guild.."]" end
@@ -82,21 +82,41 @@ SBCI.Proxy.on("broadcast_spots", function(data)
 		if(shipname ~= nil) and (string.len(shipname) > 0)then
 			shipname = "Piloting "..Article(shipname)end;
 
-			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, SBCI.colors.white, shipname);
-			SBCI.print(msg, SBCI.colors.white)
+			msg = string.format("%s%s%s %s%s%s %s%s", msg, locColor, location, playerColor, guild, name, TBS.colors.white, shipname);
+			TBS.print(msg, TBS.colors.white)
 	end
 end);
 
+--[[
+	data = {
+		KosList = [{
+			name: string,
+			faction: int,
+			reason: string
+		}]
+	}
+]]
+TBS.Proxy.on("isKoS", function(data)
+	for _, player in ipairs(data['KosList']) do
+		if(not data['name']) then return end;
+		if(not data['faction'])then
+			faction = TBS.colors.factions[0]
+		else
+			faction = TBS.colors.factions[data['faction']]
+		end
+
+		TBS.print(faction..data['name']..' @indianRed@is KoS to 214 for: @white@'..data['reason']);
+	end
+end)
 
 
 
-
-SBCI.Proxy.on("station_alarms", function(data)
+TBS.Proxy.on("station_alarms", function(data)
 	--data = {guildtag=string, sectorid=integer, msg=string};
-	SBCI.print("["..data.guildtag.."] "..data.msg);
+	TBS.print("["..data.guildtag.."] "..data.msg);
 end);
 
-SBCI.Proxy.on("keys", function(data)
+TBS.Proxy.on("keys", function(data)
 	--data = {action:"distro", keyid:<int>, list:{owners:[], users:[]}};
 	--data = {}; "Ignored"
 	--data = {}; "adduser"
@@ -118,10 +138,10 @@ SBCI.Proxy.on("keys", function(data)
 			printtable(key)
 		end;
 
-		--local name = SBCI.vokeys.GetKeySlot(data.keyid);
+		--local name = TBS.vokeys.GetKeySlot(data.keyid);
 		--name = name.." (id:"..data.keyid..")";
 		local name = params.keyid;
-		SBCI.print("(Keys) "..name.." added to the Ignore List.");
+		TBS.print("(Keys) "..name.." added to the Ignore List.");
 
 	elseif(action=="adduser")then
 
@@ -143,15 +163,15 @@ end);
 	Usually pertaining to administration actions, or other notices.
 ]]
 
-SBCI.Proxy.on("server_notice", function(data)
+TBS.Proxy.on("server_notice", function(data)
 	--data = {msg:string};
 
-	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.white.."> "..SBCI.colors.SBCI..data.msg, SBCI.colors.white);
+	TBS.print("<"..TBS.colors.TBS.."TBS"..TBS.colors.white.."> "..TBS.colors.TBS..data.msg, TBS.colors.white);
 end);
 
 
-SBCI.Proxy.on("server_attacked_stations", function(data)
+TBS.Proxy.on("server_attacked_stations", function(data)
 	--data = {msg:string};
 
-	SBCI.print("<"..SBCI.colors.SBCI.."SBCI"..SBCI.colors.white.."> "..SBCI.colors.indianRed..data.msg, SBCI.colors.white);
+	TBS.print("<"..TBS.colors.TBS.."TBS"..TBS.colors.white.."> "..TBS.colors.indianRed..data.msg, TBS.colors.white);
 end);
