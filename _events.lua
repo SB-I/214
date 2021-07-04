@@ -53,7 +53,7 @@ end);
 TBS.Proxy.on("playersSpotted", function(data)
 	for _, player in ipairs(data['players']) do
 
-		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname, status
+		local msg, playerColor, locColor, location, name, faction, sectorid, guild, shipname, status, pStatus
         msg = "Player spotted: "
         playerColor =  "";
         locColor = TBS.colors.yellow;
@@ -64,6 +64,7 @@ TBS.Proxy.on("playersSpotted", function(data)
         guild = player['guild']
         shipname = player["ship"]
 		status = player['status'] or 0;
+		pStatus = player['personalStatus'] or "";
 
 		if(name == nil or name == "")then return end; --Bad Spot.
 		if(not TBS.debug)then
@@ -87,11 +88,15 @@ TBS.Proxy.on("playersSpotted", function(data)
 			shipname = "Piloting "..Article(shipname)end;
 
 		if(status ~= nil) and (TBS.standings[status])then
-			status = " - "..TBS.standings[status]
+			status = "("..TBS.standings[status]..")"
 		end
 
-			msg = string.format("%s%s%s %s%s%s %s%s%s", msg, locColor, location, playerColor, guild, name, TBS.colors.white, shipname, status);
-			TBS.print(msg, TBS.colors.white)
+		if((pStatus ~= nil) and (pStatus ~= "")) and (TBS.standings[pStatus])then
+			pStatus = " (Personal: "..TBS.standings[pStatus]..")"
+		end
+
+		msg = string.format("%s%s%s %s%s%s%s %s%s%s", msg, locColor, location, status, playerColor, guild, name, TBS.colors.white, shipname, pStatus);
+		TBS.print(msg, TBS.colors.white)
 	end
 end);
 

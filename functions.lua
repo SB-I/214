@@ -118,7 +118,7 @@ TBS.EventPlayerEnteredGame = function(_, params)
 	-- Load our settings and login if AutoConnect is ON.
 	TBS._Settings("load"):next(function()
 		if(TBS.Settings.Data.AutoLogin=="ON")then
-			TBS.Connection._Connect();
+			TBS.Connection._Connect()
 		end;
 	end);
 

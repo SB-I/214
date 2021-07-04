@@ -10,6 +10,7 @@ dofile("_events.lua")
 dofile("settings.lua")
 ----dofile("tools.lua");
 dofile("functions.lua"); --(Keep main.lua clean!)
+dofile("_commands.lua");
 --dofile("keys.lua")--
 dofile("spotter.lua");--
 --dofile("trading.lua")
@@ -19,7 +20,7 @@ dofile("spotter.lua");--
 dofile("ui/_dofile.lua");
 --dofile("hidden/_dofile.lua");
 
-TBS.Commands = function(_, args)
+TBS._Commands = function(_, args)
     if(args)then
         local cmd = string.lower(args[1]);
         local subCmd = string.lower(args[2] or "");
@@ -69,8 +70,8 @@ TBS.Commands = function(_, args)
         elseif(cmd=="settings")then
             TBS.UISettings:showDialog();
 
-        elseif(cmd=="get_members")then
-            TBS.Guild.SendMembers();
+        --[[elseif(cmd=="who")then
+            TBS.Guild.SendMembers();]]
 
         elseif(cmd=="tct")then
             TBS.tct.target()
@@ -94,14 +95,48 @@ TBS.Commands = function(_, args)
     end;
 end;
 
+TBS.cli = function(_,args)
+    if(args)then
+        -- See if the command exists
+        local contains = function(t, value)
+            if type(t) ~= 'table' then
+                if t == value then
+                    return true
+                else
+                    return false
+                end
+            end
+            for i,v in ipairs(t) do
+                if v == value then
+                    return true
+                 end
+            end
+            return false
+        end
+
+        for i, cmd in ipairs(TBS.Commands) do
+            if contains(cmd.command, args[1]) then
+                cmd.fn(args)
+                return
+            end
+        end
+
+        TBS.print("No such command: "..args[1])
+        TBS.printCliHelp()
+    else
+        TBS.printCliHelp()
+        --TBS.UI.DisplayTBS(); --Opens TBS UI Window. (in beta stage, use "/tc3 ui")
+    end
+end
+
 --Register Commands.
-RegisterUserCommand("tbs", TBS.Commands);
+RegisterUserCommand("tbs", TBS.cli);
 RegisterUserCommand("say_tbs", TBS.TBSSay)
 
 --Register Events
 RegisterEvent(TBS.EventPlayerEnteredGame, "PLAYER_ENTERED_GAME"); --Do initialize stuff..
 RegisterEvent(TBS.CleanUp, "UNLOAD_INTERFACE") --ReloadInterface() or logout.
---RegisterEvent(TCFT3.Trading.SubmitStation, "ENTERED_STATION")
---RegisterEvent(TCFT3.Mining.EventTargetScanned, "TARGET_SCANNED")
+--RegisterEvent(TBS.Trading.SubmitStation, "ENTERED_STATION")
+--RegisterEvent(TBS.Mining.EventTargetScanned, "TARGET_SCANNED")
 
 --RegisterEvent(TBS.Proxy.Stations, "CHAT_MSG_SERVER");

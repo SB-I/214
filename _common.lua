@@ -45,7 +45,7 @@ TBS.colors.channels[2] = TBS.colors.TBS;
 TBS.standings = {};
 TBS.standings[-5] = "@white@Bot";
 TBS.standings[-2] = "@combat@KoS";
-TBS.standings[1] = "@indianRed@Caution";
+TBS.standings[-1] = "@indianRed@Caution";
 TBS.standings[0] = "@normal@Neutral";
 TBS.standings[1] = "@green@Respected";
 TBS.standings[2] = "@TBS@Ally";
@@ -92,10 +92,7 @@ TBS.SystemNames_ = {
 	{30,"Dantia",2},
 	{31,"Devlopia",0},
 	{32,"nil",0},
-	{33,"Infernus",0},
-	{34,"Devlopia",0},
-	{35,"NilSystem",0},
-	{36,"Unknown System",0},
+	{33,"Infernus",0}
 };
 
 TBS.Roles = ""; --Roles given by server.

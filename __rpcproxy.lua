@@ -73,7 +73,7 @@ TBS.Proxy.deliver = function(line)
         -- Handle incoming TC3 RPC error
         if(data.id ~= nil)then
             local status, errMsg = pcall(function()
-                TBS.Proxy.__openRpcRequests[data.id].promise:reject(data.error.message)
+                TBS.Proxy.__openRpcRequests[data.id].promise:reject(data.error)
                 TBS.Proxy.__openRpcRequests[data.id] = nil
             end)
             if not status then
@@ -116,13 +116,14 @@ TBS.Proxy.on = function(method, callback)
     TBS.Proxy.__eventHandlers[method] = callback
 end
 
-TBS.Proxy.authenticate = function(username, password, charname, charid, idstring)
+TBS.Proxy.authenticate = function(username, password, idstring)
     TBS.debugprint("authenticate")
     local params = {
+        version = TBS.Version,
         username = username,
         password = password,
-        guildtag = GetGuildTag(),
-        charname = GetPlayerName(),
+        --guildtag = GetGuildTag(),
+        --charname = GetPlayerName(),
         charid = GetCharacterID(),
         idstring = idstring
     };
@@ -139,19 +140,21 @@ end;
 
 
 
---[[TBS.Proxy.getOnlineUsers = function()
+TBS.Proxy.getOnlineUsers = function()
     return TBS.Proxy._request("get_online_users", {})
-end]]
+end
 
 -- Get the current logged-in user's roles
---[[TBS.Proxy.getRoles = function()
+TBS.Proxy.getRoles = function()
     return TBS.Proxy._request("get_roles", {})
-end]]
+end
 
 -- Get all available/possible roles
---[[TBS.Proxy.getAllRoles = function()
+TBS.Proxy.getAllRoles = function()
     return TBS.Proxy._request("get_all_roles", {})
-end]]
+end
+
+
 
 --[[
     Submit station/item info.
@@ -204,41 +207,6 @@ end]]
 
 
 --[[
-playersSpotted()
-Expected params:
-
-    params = {
-        sectorid = int,
-        players = [{
-            name = string (required),
-            id = int (VO id, optional),
-            guildtag = string (optional),
-            shipname = string (optional)
-            faction = int (optional)
-        }, ... ]
-    }
-
-]]
-TBS.Proxy.playersSpotted = function(params)
-    TBS.Proxy._notify('players_spotted', params)
-    --[[:next(function(kosList) -- kosLis = [{ name=str, faction=int, reason=str }]
-	    if(kosList == false)then return end -- No KoS's were found.
-
-        for _, player in ipairs(kosList) do
-            if(not player['name']) then return end;
-            local faction = "";
-            if(not player['faction'])then
-                faction = TBS.colors.faction[0]
-            else
-                faction = TBS.colors.faction[player['faction']]
-    --[[        end
-
-            TBS.print('@white@The pilot '..faction..player['name']..' @white@is KoS to [214] for: @yellow@'..player['reason']);
-        end
-    end)]]
-end
-
---[[
 registerNewUser()
 
 Call this function to begin the process of registering a new user to TBS.
@@ -274,7 +242,7 @@ Example use case scenario:
 Note: This function can also be used to reset an existing member's password.
 ]]
 
---[[TBS.Proxy.registerNewUser = function(name, roles)
+TBS.Proxy.registerNewUser = function(name, roles)
     local params = {
         username = name,
         roles = roles }
@@ -283,20 +251,6 @@ Note: This function can also be used to reset an existing member's password.
             return result.auth_code
         end)
     return p
-end]]
-
-TBS.Proxy.sendChat = function(msg, sectorid, isemote, ch)
-
-    if(not ch)then ch = 0 end;
-
-    local params = {
-        msg = msg,
-        sectorid = sectorid,
-        isemote = isemote,
-        channel = ch
-    };
-
-    return TBS.Proxy._notify('chat', params)
 end
 
 --[[
@@ -320,22 +274,23 @@ Parameters:
 Returns:
     true on success
 ]]
---[[TBS.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
-    local faction = nil
+TBS.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
+    local faction = GetPlayerFaction();
     local email = nil
+
     if opt_params ~= nil then
-        faction = opt_params.faction
         email = opt_params.email
     end
+
     local params = {
         username = name,
         password = password,
-        nonce = authCode,
         email = email,
-        faction = faction
+        faction = faction,
+        nonce = authCode,
     }
     return TBS.Proxy._request('set_member_password', params)
-end]]
+end
 
 --[[
 submitRoidInfo()
@@ -366,6 +321,24 @@ Paramaters:
     }
     return TBS.Proxy._notify('submit_roids', params)
 end]]
+
+
+
+
+TBS.Proxy.sendChat = function(msg, sectorid, isemote, ch)
+
+    if(not ch)then ch = 0 end;
+
+    local params = {
+        msg = msg,
+        sectorid = sectorid,
+        isemote = isemote,
+        channel = ch
+    };
+
+    return TBS.Proxy._notify('chat', params)
+end
+
 
 --[[
     Relay chat to RelayServer.
@@ -417,4 +390,40 @@ TBS.Proxy.GetKoS = function(parmas)
     if(not params)then
         return TBS.Proxy._request('KoS', {type='getKoS'});
     end
+end
+
+
+--[[
+playersSpotted()
+Expected params:
+
+    params = {
+        sectorid = int,
+        players = [{
+            name = string (required),
+            id = int (VO id, optional),
+            guildtag = string (optional),
+            shipname = string (optional)
+            faction = int (optional)
+        }, ... ]
+    }
+
+]]
+TBS.Proxy.playersSpotted = function(params)
+    TBS.Proxy._notify('players_spotted', params)
+    --[[:next(function(kosList) -- kosLis = [{ name=str, faction=int, reason=str }]
+	    if(kosList == false)then return end -- No KoS's were found.
+
+        for _, player in ipairs(kosList) do
+            if(not player['name']) then return end;
+            local faction = "";
+            if(not player['faction'])then
+                faction = TBS.colors.faction[0]
+            else
+                faction = TBS.colors.faction[player['faction']]
+    --[[        end
+
+            TBS.print('@white@The pilot '..faction..player['name']..' @white@is KoS to [214] for: @yellow@'..player['reason']);
+        end
+    end)]]
 end

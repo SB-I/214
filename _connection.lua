@@ -83,7 +83,7 @@ TBS.Connection._Connect = function()
 
     local dpasswd = gkini.ReadString("SpyaBeje Industries","idstring" ,"None")
     if ((dpasswd == "None") or (string.len(dpasswd) < 64)) then
-        dpasswd = SBC.RandomString(64)
+        dpasswd = TBS.RandomString(64)
         gkini.WriteString("SpyaBeje Industries", "idstring", dpasswd);
     end;
 
@@ -92,7 +92,7 @@ TBS.Connection._Connect = function()
     :next( function()--Once we've connected, Authenticate.
         return TBS.Proxy.authenticate(username, password, dpasswd)
     end):next( function(data)--{roles:<Array>, onlineUsers:str}
-        if(data)then
+        if(data and not data.error)then
             TBS.print(TBS.colors.TBS.."Authenticated.")
 
             if(data['onlineUsers'])then --Receiving list of logged in users
@@ -103,6 +103,10 @@ TBS.Connection._Connect = function()
                 TBS.Roles = data.roles;
                 TBS.debugprint("Roles Given by server: "..table.concat(TBS.Roles,", "))
             end;
+        elseif(data and data.error)then
+
+                TBS.print('@indianRed@'..data.error.type..": @white@"..data.error.message);
+
         else
             --TBS.UpdateStatusLine(TBS.colors.RED.."Connection Failed")
             return Promise.reject("Authentication failed.")
@@ -116,6 +120,13 @@ TBS.Connection._Connect = function()
         --if(TBS.Settings.Data.BroadcastArrival == "ON")then TBS.Proxy.broadcastArrival() end
         TBS.print(TBS.colors.TBS.."Connected!")]]
     end):catch( function(error)
-        TBS.print("Error connecting to TBS server: "..error, TBS.colors.indianRed)
+        local msg = "";
+        if(error.code)then
+            msg = "@indianRed@Internal server error: "..error.code.." - "..error.message;
+        else
+            msg = "@indianRed@Error connecting to TBS server: "..error;
+        end
+
+        TBS.print(msg)
     end)
 end;
