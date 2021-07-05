@@ -89,5 +89,6 @@ function TBS.UISettings.updateUI()
     --TBS.Settings.st.AutoRepair.value = TBS.Settings.Data.AutoRepair or "ON";
     --TBS.Settings.st.AutoReload.value = TBS.Settings.Data.AutoReload or "ON";
     --TBS.Settings.st.Spotter_HUD.value = TBS.Settings.Data.Spotter_HUD or "ON";
+    TBS.Settings.st.ShowSectorSpots.value = TBS.Settings.Data.ShowSectorSpots or "ON"
     ----TBS.Settings.st.ShowPDAButtons.value = TBS.Settings.Data.ShowPDAButtons or "ON";
 end;

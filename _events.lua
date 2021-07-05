@@ -67,7 +67,7 @@ TBS.Proxy.on("playersSpotted", function(data)
 		pStatus = player['personalStatus'] or "";
 
 		if(name == nil or name == "")then return end; --Bad Spot.
-		if(not TBS.debug)then
+		if(not TBS.Settings.Data.ShowSectorSpots)then
 			if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
 		end;
 

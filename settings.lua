@@ -77,6 +77,7 @@ TBS._Settings = function(type)
         --TBS.Settings.Data.AutoRepair = TBS.Settings.st.AutoRepair.value or "ON";
         --TBS.Settings.Data.AutoReload = TBS.Settings.st.AutoReload.value or "ON";
         --TBS.Settings.Data.Spotter_HUD = TBS.Settings.st.Spotter_HUD.value or "ON";
+        TBS.Settings.Data.ShowSectorSpots = TBS.Settings.st.ShowSectorSpots.value or "ON";
 
 
         TBS.debugprint("Saving Settings:\n"..spickle(TBS.Settings.Data))
