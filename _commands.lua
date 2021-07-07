@@ -135,7 +135,7 @@ TBS.newCliCommand({'set_member_password', 'setmemberpassword', 'setpassword'},
                 return TBS.Proxy.setMemberPassword(GetPlayerName(), args[2], args[3], opt_params)
             end)
             :next( function(result)
-                TBS.debugprint("setMemberPassword result: " .. toString(result))
+                TBS.debugprint("setMemberPassword result: " .. tostring(result))
             end)
             :catch( function(err)
                 TBS.debugprint("setMemberPassword failed: " .. err)
