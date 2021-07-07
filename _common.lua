@@ -4,7 +4,7 @@ TBS - General Use "Common"
 
 --General Stuff;
 TBS.debug = false;
-TBS.Version = "0.2.2";
+TBS.Version = "0.2.4";
 TBS.IsInitialised = false
 
 -- Hex color codes "\127RRGGBB" format

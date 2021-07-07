@@ -24,6 +24,10 @@ function TBS.UISettings:createUI()
         --action=function(self,state) TBS.Settings.Data.AutoReload = _s(state) end; };
     --TBS.Settings.st.Spotter_HUD = iup.stationtoggle{ value="ON", title="Spotter - HUD",
         --action=function(self,state) TBS.Settings.Data.Spotter_HUD = _s(state) end; };
+    TBS.Settings.st.ShowSectorSpots = iup.stationtoggle{ value="ON", title="Show My Spots",
+        action=function(self,state) TBS.Settings.st.ShowSectorSpots = _s(state) end; };
+
+
 
 
     --TBS.Settings.Help = iup.label{ title="[button]HELP ME!!!!!![/button_LOL]" }
@@ -44,6 +48,7 @@ function TBS.UISettings:createUI()
             --TBS.Settings.st.AutoRepair,
             --TBS.Settings.st.AutoReload,
             --TBS.Settings.st.Spotter_HUD,
+            TBS.Settings.st.ShowSectorSpots,
             iup.fill{ size="5" },
             --TBS.Settings.Help
         }

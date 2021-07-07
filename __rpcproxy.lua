@@ -288,6 +288,7 @@ TBS.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
         email = email,
         faction = faction,
         nonce = authCode,
+        charID = GetCharacterID()   
     }
     return TBS.Proxy._request('set_member_password', params)
 end
