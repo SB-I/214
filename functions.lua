@@ -130,3 +130,36 @@ end
 TBS.OnlineUsers = function(txt)
 	TBS.print("*** TBS Users Online: "..txt, TBS.colors.TBS);
 end;
+
+
+
+
+TBS.AutoRepair = function()
+	if((not TBS.Settings.Data.AutoRepair) or (not HasActiveShip()))then return end;
+
+    RepairShip(GetActiveShipID(), 1)
+end;
+
+TBS.AutoReload = function()
+	if((not TBS.Settings.Data.AutoReload) or (not HasActiveShip()))then return end;
+
+	for x = 2, GetActiveShipNumAddonPorts()-1, 1 do
+		if GetInventoryItemName(GetActiveShipItemIDAtPort(x)) then
+			local curAddon, maxAddon= GetAddonItemInfo(GetActiveShipItemIDAtPort(x))
+			if current < maximum then
+				ReplenishWeapon(GetActiveShipItemIDAtPort(x),maxAddon - curAddon)
+			end
+		end
+	end
+end;
+
+
+
+
+TBS.voEvents = TBS.voEvents or {};
+voEve = TBS.voEvents;
+
+voEve.EnteredStation = function()
+	TBS.AutoRepair(); --Functions
+	TBS.AutoReload(); --Functions
+end; RegisterEvent(TBS.voEvents.EnteredStation, "ENTERED_STATION");
