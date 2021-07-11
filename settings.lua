@@ -69,15 +69,15 @@ TBS._Settings = function(type)
 
     elseif(type=="save")then
 
+        TBS.Settings.Data.Version = TBS.Version;
         TBS.Settings.Data.Username = TBS.Settings.st.Username.value or "";
         TBS.Settings.Data.Password = TBS.Settings.st.Password.value or "";
         TBS.Settings.Data.AutoLogin = TBS.Settings.st.AutoLogin.value or "ON";
-        --TBS.Settings.Data.BroadcastArrival = TBS.Settings.st.BroadcastArrival.value or "ON";
         TBS.Settings.Data.SendLocation = TBS.Settings.st.SendLocation.value or "ON";
-        --TBS.Settings.Data.AutoRepair = TBS.Settings.st.AutoRepair.value or "ON";
-        --TBS.Settings.Data.AutoReload = TBS.Settings.st.AutoReload.value or "ON";
+        TBS.Settings.Data.AutoRepair = TBS.Settings.st.AutoRepair.value or "ON";
+        TBS.Settings.Data.AutoReload = TBS.Settings.st.AutoReload.value or "ON";
         --TBS.Settings.Data.Spotter_HUD = TBS.Settings.st.Spotter_HUD.value or "ON";
-        TBS.Settings.Data.ShowSectorSpots = TBS.Settings.st.ShowSectorSpots.value or "ON";
+        TBS.Settings.Data.ShowSpots = TBS.Settings.st.ShowSpots.value or "ON";
 
 
         TBS.debugprint("Saving Settings:\n"..spickle(TBS.Settings.Data))

@@ -14,18 +14,16 @@ function TBS.UISettings:createUI()
     TBS.Settings.st.Password = iup.text { value="", expand="YES", size="200x", password="YES" };
     TBS.Settings.st.AutoLogin = iup.stationtoggle{ value="ON", title="AutoLogin",
         action=function(self,state) TBS.Settings.Data.AutoLogin = _s(state) end; };
-    --TBS.Settings.st.BroadcastArrival = iup.stationtoggle{ value="ON", title="Broadcast Arrival",
-        --action=function(self,state) TBS.Settings.Data.BroadcastArrival = _s(state) end; };
     TBS.Settings.st.SendLocation = iup.stationtoggle{ value="ON", title="Send Location",
         action=function(self,state) TBS.Settings.Data.SendLocation = _s(state) end; };
-    --TBS.Settings.st.AutoRepair = iup.stationtoggle{ value="ON", title="Auto Repair",
-        --action=function(self,state) TBS.Settings.Data.AutoRepair = _s(state) end; };
-    --TBS.Settings.st.AutoReload = iup.stationtoggle{ value="ON", title="Auto Reload",
-        --action=function(self,state) TBS.Settings.Data.AutoReload = _s(state) end; };
+    TBS.Settings.st.AutoRepair = iup.stationtoggle{ value="ON", title="Auto Repair",
+        action=function(self,state) TBS.Settings.Data.AutoRepair = _s(state) end; };
+    TBS.Settings.st.AutoReload = iup.stationtoggle{ value="ON", title="Auto Reload",
+        action=function(self,state) TBS.Settings.Data.AutoReload = _s(state) end; };
     --TBS.Settings.st.Spotter_HUD = iup.stationtoggle{ value="ON", title="Spotter - HUD",
         --action=function(self,state) TBS.Settings.Data.Spotter_HUD = _s(state) end; };
-    TBS.Settings.st.ShowSectorSpots = iup.stationtoggle{ value="ON", title="Show My Spots",
-        action=function(self,state) TBS.Settings.st.ShowSectorSpots = _s(state) end; };
+    TBS.Settings.st.ShowSpots = iup.stationtoggle{ value="ON", title="Show Spots",
+        action=function(self,state) TBS.Settings.st.ShowSpots = _s(state) end; };
 
 
 
@@ -48,7 +46,7 @@ function TBS.UISettings:createUI()
             --TBS.Settings.st.AutoRepair,
             --TBS.Settings.st.AutoReload,
             --TBS.Settings.st.Spotter_HUD,
-            TBS.Settings.st.ShowSectorSpots,
+            TBS.Settings.st.ShowSpots,
             iup.fill{ size="5" },
             --TBS.Settings.Help
         }
@@ -94,6 +92,6 @@ function TBS.UISettings.updateUI()
     --TBS.Settings.st.AutoRepair.value = TBS.Settings.Data.AutoRepair or "ON";
     --TBS.Settings.st.AutoReload.value = TBS.Settings.Data.AutoReload or "ON";
     --TBS.Settings.st.Spotter_HUD.value = TBS.Settings.Data.Spotter_HUD or "ON";
-    TBS.Settings.st.ShowSectorSpots.value = TBS.Settings.Data.ShowSectorSpots or "ON"
+    TBS.Settings.st.ShowSpots.value = TBS.Settings.Data.ShowSpots or "ON"
     ----TBS.Settings.st.ShowPDAButtons.value = TBS.Settings.Data.ShowPDAButtons or "ON";
 end;
