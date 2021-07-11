@@ -67,9 +67,15 @@ TBS.Proxy.on("playersSpotted", function(data)
 		pStatus = player['personalStatus'] or "";
 
 		if(name == nil or name == "")then return end; --Bad Spot.
-		if(not TBS.Settings.Data.ShowSectorSpots)then
-			if(sectorid == GetCurrentSectorid() or sectorid == nil)then return end; --Same location.
+
+		if(sectorid == GetCurrentSectorid())then
+
+			TBS.__PlayersInSector[GetCharacterIDByName(name)] = { status = status, pStatus = pStatus };
+			printtable(TBS.__PlayersInSector)
+			--table.concat(TBS.__PlayersInSector, {GetCharacterIDByName(name), {'status':status, 'pStatus':pStatus}});
 		end;
+
+		--if(not TBS.Settings.Data.ShowSpots)then return end; --Client doesn't want to see spots.
 
 		if(sectorid ~= nil) and (sectorid > 0)then
 			local alignment = TBS.SystemNames_[GetSystemID(sectorid)][3];
@@ -88,11 +94,11 @@ TBS.Proxy.on("playersSpotted", function(data)
 			shipname = "Piloting "..Article(shipname)end;
 
 		if(status ~= nil) and (TBS.standings[status])then
-			status = "("..TBS.standings[status]..")"
+			status = TBS.colors.standings[status].."("..TBS.standings[status]..")"
 		end
 
-		if((pStatus ~= nil) and (pStatus ~= "")) and (TBS.standings[pStatus])then
-			pStatus = " (Personal: "..TBS.standings[pStatus]..")"
+		if((pStatus ~= "") and (pStatus ~= "")) and (TBS.standings[pStatus])then
+			pStatus = TBS.colors.standings[pStatus].." (Personal: "..TBS.standings[pStatus]..")"
 		end
 
 		msg = string.format("%s%s%s %s%s%s%s %s%s%s", msg, locColor, location, status, playerColor, guild, name, TBS.colors.white, shipname, pStatus);

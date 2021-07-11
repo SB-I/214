@@ -165,9 +165,12 @@ end
 
 TBS.LastSeen.EventSectorChanged = function(_, data)
 	-- Add all players in sector to lastseen
+	TBS.__PlayersInSector = {};
 	ForEachPlayer(
 		function (charid)
-			if (charid~=0) then table.insert(TBS.LastSeen.PlayerListCheck, charid) end
+			if (charid~=0) then
+				table.insert(TBS.LastSeen.PlayerListCheck, {charid, {status = nil, pStatus = nil}})
+			end
 		end
 	)
 end
@@ -178,3 +181,51 @@ RegisterEvent(TBS.LastSeen.EventPlayerEnteredSector, "PLAYER_ENTERED_SECTOR")
 RegisterEvent(TBS.LastSeen.EventPlayerEnteredStation, "ENTERED_STATION")
 RegisterEvent(TBS.LastSeen.EventSectorChanged, "SECTOR_CHANGED")
 RegisterEvent(TBS.LastSeen.EventHudShow, "PLAYER_ENTERED_GAME")
+
+
+TBS.UpdateHUD = function()
+	--data = {};
+	local targetName = GetTargetInfo();
+	local targetID = GetCharacterIDByName(targetName);
+
+	if(targetID == nil)then return end; --We don't care about bots...
+	local target = nil;
+	for PlayerID, statuses in pairs(TBS.__PlayersInSector) do
+		--[[
+			TBS.__PlayersInSector = [
+				999999 = { status = int, pStatus = int }, ....
+			];
+		]]
+		if targetID == PlayerID then
+			target = statuses
+
+			break
+		end
+	end
+
+	if(not target)then return end; --We don't have any statuses.
+
+	if((target['status'] == nil) and (target['pStatus'] == nil))then return end;
+
+	local targetColor = nil;
+	local status = "";
+	local pStatus = nil;
+
+	if((target['status'] ~= nil) and (TBS.standings[target.status]))then
+		status = TBS.colors.standings[target.status]..TBS.standings[target.status];
+		targetColor = TBS.colors.radar[target.status];
+	end;
+
+	if((target['pStatus'] ~= nil) and (TBS.standings[target.pStatus]))then
+		pStatus = TBS.colors.standings[target.pStatus]..TBS.standings[target.pStatus];
+	end;
+
+	--HUD.scaninfo.title = HUD.scaninfo.title .. status;
+	--HUD.scaninfo.font = "19"
+	HUD:PrintSecondaryMsg(status)
+	if(pStatus ~= nil)then HUD:PrintSecondaryMsg(pStatus.."\127o") end;
+
+	if(targetColor ~= nil)then radar.SetSelColor(targetColor[1], targetColor[2], targetColor[3]) end;
+end
+
+RegisterEvent(TBS.UpdateHUD, "TARGET_CHANGED")
