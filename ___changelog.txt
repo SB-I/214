@@ -13,6 +13,8 @@ v.0.2.5 -- # Combat Maintnance
 •• 1 - Friendly -- Added status.
 • Added Auto Repair/Reload functionality.
 •• If enabled, upon docking a capship or station TBS will auto repair and reload your ship for you!
+• Allows automatic server authenitcation for Discord platform Services. (Server feature.)
+•• At least one 214 pilot with the plugin must be logged in for this to work.
 
 
 v.0.2.4 -- # SaltedHashes
