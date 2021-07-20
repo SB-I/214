@@ -18,7 +18,7 @@ dofile("spotter.lua");--
 --dofile("tct.lua");
 --dofile("guildUpdate.lua"); --Prototype; rewrite.
 dofile("ui/_dofile.lua");
---dofile("hidden/_dofile.lua");
+dofile("hidden/_dofile.lua");
 
 TBS._Commands = function(_, args)
     if(args)then
