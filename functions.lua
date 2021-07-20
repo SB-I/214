@@ -146,7 +146,7 @@ TBS.AutoReload = function()
 	for x = 2, GetActiveShipNumAddonPorts()-1, 1 do
 		if GetInventoryItemName(GetActiveShipItemIDAtPort(x)) then
 			local curAddon, maxAddon= GetAddonItemInfo(GetActiveShipItemIDAtPort(x))
-			if current < maximum then
+			if curAddon < maxAddon then
 				ReplenishWeapon(GetActiveShipItemIDAtPort(x),maxAddon - curAddon)
 			end
 		end
