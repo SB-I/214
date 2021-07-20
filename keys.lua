@@ -15,5 +15,5 @@ function TBS.vokeys.IssuingKeysCB(err,result)
             LK_keyid, LK_description, LK_owner, LK_timestamp, LK_access, LK_possessors, LK_active = GetKeyInfo(i)
             if (tonumber(LK_keyid) == tonumber(keynum)) then return i end
         end
-    return -1 -- Not found in the list
+        return -1 -- Not found in the list
     end
