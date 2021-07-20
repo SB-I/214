@@ -60,14 +60,19 @@ TBS.Proxy.deliver = function(line)
     elseif data.method ~= nil then
         -- Handle incoming TC3 RPC call. TODO : Must send result back to server
         TBS.debugprint('Handle incoming method call from server: '..data.method)
+        local result = nil;
 
         local status, errMsg = pcall( function()
-            TBS.Proxy.__eventHandlers[data.method](data.params)
+            result = TBS.Proxy.__eventHandlers[data.method](data.params)
         end)
 
         if status == false then
             TBS.print("ERROR: Could not call event handler: "..errMsg, TBS.colors.RED)
-        end
+            return false
+        else
+            TBS.Proxy._result(result, data['id']);
+        end;
+        return;
 
     elseif data.error ~= nil then
         -- Handle incoming TC3 RPC error
@@ -111,6 +116,15 @@ TBS.Proxy._notify= function(method, params)
     TBS.Connection.send(_json.encode(packet) .. "\r\n")
     return
 end
+
+-- Interal send function. Expects an object for result, and an int for id/
+TBS.Proxy._result = function(result, id)
+    local packet = {result = result, id = id};
+
+    TBS.debugprint("Sending rpc result: " .. spickle(packet))
+    TBS.Connection.send(_json.encode(packet) .. "\r\n")
+    return
+end;
 
 TBS.Proxy.on = function(method, callback)
     TBS.Proxy.__eventHandlers[method] = callback
@@ -288,7 +302,7 @@ TBS.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
         email = email,
         faction = faction,
         nonce = authCode,
-        charID = GetCharacterID()   
+        charID = GetCharacterID()
     }
     return TBS.Proxy._request('set_member_password', params)
 end
