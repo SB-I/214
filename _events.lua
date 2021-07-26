@@ -101,7 +101,7 @@ TBS.Proxy.on("playersSpotted", function(data)
 			pStatus = TBS.colors.standings[pStatus].." (Personal: "..TBS.standings[pStatus]..")"
 		end
 
-		msg = string.format("%s%s%s %s%s%s%s %s%s%s", msg, locColor, location, status, playerColor, guild, name, TBS.colors.white, shipname, pStatus);
+		msg = string.format("%s%s%s %s %s%s%s %s%s%s", msg, locColor, location, status, playerColor, guild, name, TBS.colors.white, shipname, pStatus);
 		TBS.print(msg, TBS.colors.white)
 	end
 end);
