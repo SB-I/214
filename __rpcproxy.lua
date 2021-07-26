@@ -442,3 +442,15 @@ TBS.Proxy.playersSpotted = function(params)
         end
     end)]]
 end
+
+
+--[[
+    @params = object
+    {
+        hostile: str, --Hostile Name
+        sectorID: int --Sector sos was sent in.
+    }
+]]
+TBS.Proxy.SoS = function(params)
+    return TBS.Proxy._request('sos', params);
+end;

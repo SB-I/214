@@ -131,7 +131,8 @@ end
 
 --Register Commands.
 RegisterUserCommand("tbs", TBS.cli);
-RegisterUserCommand("say_tbs", TBS.TBSSay)
+RegisterUserCommand("say_tbs", TBS.TBSSay);
+RegisterUserCommand("sos", function() TBS.cli(nil, {'sos'}) end);
 
 --Register Events
 RegisterEvent(TBS.EventPlayerEnteredGame, "PLAYER_ENTERED_GAME"); --Do initialize stuff..

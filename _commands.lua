@@ -154,3 +154,23 @@ TBS.newCliCommand({'ui_register_user', 'uiregisteruser'},
     end,
     "UI interface to register a new user. Automaticaly generates and sends the new user an auth-code they can use to create an account."
 )
+
+
+TBS.newCliCommand({'sos'},
+    function(args)
+        local lastAggressor = GetPlayerName(GetCharacterID(GetLastAggressor())); --name, --charID, --nodeID
+
+        if(not lastAggressor)then
+            TBS.print('Cannot post an SoS for "'..lastAggressor..'"!');
+            return
+        end;
+
+        if(lastAggressor == GetPlayerName() --[[or os.time() < (60000 TBS.lastTimeShot)]])then
+            TBS.print('There is no recent LastAggressor!');
+            return;
+        end;
+
+        TBS.Proxy.SoS({hostile=lastAggressor, sectorID=GetCurrentSectorid()});
+    end,
+    "Send an SoS to discord!! (Not a garuntee for help)"
+)
