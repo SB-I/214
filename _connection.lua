@@ -103,6 +103,21 @@ TBS.Connection._Connect = function()
                 TBS.Roles = data.roles;
                 TBS.debugprint("Roles Given by server: "..table.concat(TBS.Roles,", "))
             end;
+
+            if(data['allStats'])then
+                local txt = "";
+                local stats = data['allStats'];
+
+                for _, status in pairs(stats) do
+                    TBS.standings[status.id] = status.name;
+                    TBS.colors.radar[status.id] = status.rgb;
+                    TBS.colors.standings[status.id] = "\127"..status.hex;
+
+                    txt = txt.."["..status.id.."] = \""..status.name.."\"";
+                end;
+
+                TBS.debugprint("Status's given by server: "..txt);
+            end;
         elseif(data and data.error)then
 
                 TBS.print('@indianRed@'..data.error.type..": @white@"..data.error.message);

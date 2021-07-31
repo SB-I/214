@@ -48,36 +48,6 @@ TBS.colors.channels[2] = TBS.colors.TBS;
 TBS.standings = {};
 TBS.colors.radar = {};
 TBS.colors.standings = {};
---Standing Radarlock Colors
-TBS.colors.radar[4] = {0, 179, 179}; 	--TBS
-TBS.colors.radar[3] = {0, 136, 0}; 		--green
-TBS.colors.radar[2] = {0, 179, 179}; 	--TBS
-TBS.colors.radar[1] = {0, 136, 0}; 		--green
-TBS.colors.radar[0] = {255, 255, 255}; 	--white
-TBS.colors.radar[-1] = {205, 92, 91}; 	--indianRed
-TBS.colors.radar[-2] = {255, 0, 0}; 	--combat
-TBS.colors.radar[-5] = {255, 255, 255}; --white
-
---Standing Colors
-TBS.colors.standings[4] = TBS.colors.TBS;
-TBS.colors.standings[3] = TBS.colors.green;
-TBS.colors.standings[2] = TBS.colors.TBS;
-TBS.colors.standings[1] = TBS.colors.green;
-TBS.colors.standings[0] = TBS.colors.white;
-TBS.colors.standings[-1] = TBS.colors.indianRed;
-TBS.colors.standings[-2] = TBS.colors.combat;
-TBS.colors.standings[-5] = TBS.colors.white;
-
---Standing Titles
-TBS.standings[4] = "Guildie";
-TBS.standings[3] = "Respected";
-TBS.standings[2] = "Ally";
-TBS.standings[1] = "Friendly";
-TBS.standings[0] = "Neutral";
-TBS.standings[-1] = "Caution";
-TBS.standings[-2] = "KoS";
-TBS.standings[-5] = "Bot";
-
 
 local colour_delimiter = "@"
 TBS.colour_codes = {}
@@ -123,5 +93,5 @@ TBS.SystemNames_ = {
 };
 
 TBS.Roles = ""; --Roles given by server.
-
+TBS.lastTimeShot = 0;
 TBS.__PlayersInSector = TBS.__PlayersInSector or {};

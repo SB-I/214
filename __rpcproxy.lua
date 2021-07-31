@@ -70,7 +70,9 @@ TBS.Proxy.deliver = function(line)
             TBS.print("ERROR: Could not call event handler: "..errMsg, TBS.colors.RED)
             return false
         else
-            TBS.Proxy._result(result, data['id']);
+            if(data['id'])then
+                TBS.Proxy._result(result, data['id']);
+            end;
         end;
         return;
 
@@ -166,6 +168,20 @@ end
 -- Get all available/possible roles
 TBS.Proxy.getAllRoles = function()
     return TBS.Proxy._request("get_all_roles", {})
+end
+
+-- Get all possible status's.
+TBS.Proxy.getAllStatus = function()
+    local p = Promise.new()
+    TBS.Proxy._request("get_all_status", {}):next(function(stats)
+        local compare = function(a,b)
+            return a[1] > b[1]
+        end
+
+        table.sort(stats, compare)
+        p:resolve(stats);
+    end)
+    return p;
 end
 
 
