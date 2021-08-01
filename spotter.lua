@@ -78,7 +78,7 @@ TBS.LastSeen.CheckSendData = function()
 	end
 	if (#tmplist>0) then
 		-- TBS.Send({ method="players_spotted", cmd="1250"}, {players=tmplist});
-		if(TBS.isConnected(0))then TBS.Proxy.playersSpotted( { players=tmplist } ); end;
+		if(TBS.isConnected(false))then TBS.Proxy.playersSpotted( { players=tmplist } ); end;
 	end
 	TBS.LastSeen.Timer:SetTimeout(TBS.LastSeen.Timeout*1000, TBS.LastSeen.CheckSendData)
 end
