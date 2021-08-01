@@ -22,7 +22,7 @@ TBS.Proxy.on("chat_msg", function(data)
 	local chatColor = TBS.colors.channels[channel];
 
 	if faction and faction ~= 0 then
-		faction = TBS.colors.faction[3]
+		faction = TBS.colors.faction[faction]
 	else
         faction = TBS.colors.normal
 	end
