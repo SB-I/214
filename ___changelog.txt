@@ -1,5 +1,32 @@
-v.0.2.0
-** Adding "combat", add ability to communicate with server and all connected members in sector, as well as those in group not connected.
+#Changelog
 
-v.0.1.0
-** Initial creation.
+0.2.5 -- In progress -- Dev Features
+• Now Cache's players and their status's. (This helps visually when targetting a player.)
+•• Displays the pilots status as a SecondaryHUDMessage.
+
+
+v.0.2.5 -- # Combat Maintnance
+• Added a new status, changed positve numbers.
+•• 4 - Guildie
+•• 3 - Respected (Community Respected pilot)
+•• 2 - Allied (Do Not Shoot)
+•• 1 - Friendly -- Added status.
+• Added Auto Repair/Reload functionality.
+•• If enabled, upon docking a capship or station TBS will auto repair and reload your ship for you!
+• Allows automatic server authenitcation for Discord platform Services. (Server feature.)
+•• At least one 214 pilot with the plugin must be logged in for this to work.
+• Added SoS feature (/sos) which notifies connected clients and Discord clients of an emergancy!!
+
+
+v.0.2.4 -- # SaltedHashes
+• Server Password Salting/Hashing.
+• Client reports a spotted pilots status.
+•• 3 - Guildie
+•• 2 - Allied (Do Not Shoot)
+•• 1 - Respected
+•• 0 - Neutral (Default status)
+•• -1 - Caution (Warning, pilot may be hostile)
+•• -2 - KoS (Weapons Free)
+•• -5 - Known Bot. (So-so -- Literally a bot.... Be spotter or shop.)
+
+v.0.2.0 - v.0.2.3 -- rewrites, not logged.

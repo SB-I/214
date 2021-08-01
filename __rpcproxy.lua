@@ -1,11 +1,11 @@
 --[[
     RPC Proxy coded by Xanos.
-    Edited by "Scion Spy" for SBCI.
+    Edited by "Scion Spy" for TBS.
 ]]
 
-SBCI.Proxy = SBCI.Proxy or {}
+TBS.Proxy = TBS.Proxy or {}
 
-SBCI.Proxy.__eventHandlers = {}
+TBS.Proxy.__eventHandlers = {}
 
 -- Objects in __openRpcRequests should have the following format:
 -- {
@@ -13,102 +13,142 @@ SBCI.Proxy.__eventHandlers = {}
 --     promise = promise
 -- }
 -- keys are message ids
-SBCI.Proxy.__openRpcRequests = {}
-SBCI.Proxy.__msg_id_index = 0
-SBCI.Proxy.timer = Timer()
+TBS.Proxy.__openRpcRequests = {}
+TBS.Proxy.__msg_id_index = 0
+TBS.Proxy.timer = Timer()
 
 local TIMEOUT = 8 -- seconds
 
 -- Check for expired requests every second
-SBCI.Proxy.timer:SetTimeout(TIMEOUT*1000, function()
-    for k, v in pairs(SBCI.Proxy.__openRpcRequests) do
+TBS.Proxy.timer:SetTimeout(TIMEOUT*1000, function()
+    for k, v in pairs(TBS.Proxy.__openRpcRequests) do
         if (os.time() - v.timestamp) > TIMEOUT then
             v.promise:reject("RPC Request timed out.")
-            SBCI.Proxy.__openRpcRequests[k] = nil
+            TBS.Proxy.__openRpcRequests[k] = nil
         end
     end
 end)
 
 
 -- Deliver all incoming messages from the RPC server to this function.
-SBCI.Proxy.deliver = function(line)
+TBS.Proxy.deliver = function(line)
     local data = nil
     local status, errmsg = pcall(function()
         data = _json.decode(line)
     end)
-
     if not status then
-        SBCI.debugprint('Could not decode incoming json: ' .. line)
+        TBS.debugprint('Could not decode incoming json: ' .. line)
         return
     end
-
-    if(data.method ~= nil)then
-        SBCI.debugprint('Incoming method: '..data.method);
+    if(data.result~=nil)then --Incoming is response to a recent TC3 request.
+        TBS.debugprint('Received result from server.')
+        if(TBS.Proxy.__openRpcRequests[data.id] == nil)then
+            TBS.print("Unknown Request: ID:"..data.id..", Obj:"..data, TBS.colors.RED)
+            return
+        end
+        local status, errMsg = pcall(function()
+            TBS.Proxy.__openRpcRequests[data.id].promise:resolve(data.result)
+            -- Apparently, setting table value to "nil" is an acceptable way of
+            -- removing an item from a table based on the key value.
+            -- https://stackoverflow.com/questions/1758991/how-to-remove-a-lua-table-entry-by-its-key
+            TBS.Proxy.__openRpcRequests[data.id] = nil;
+        end)
+        if status == false then
+            TBS.print('ERROR calling result handler: '..errMsg, TBS.colors.RED)
+            return
+        end
+    elseif data.method ~= nil then
+        -- Handle incoming TC3 RPC call. TODO : Must send result back to server
+        TBS.debugprint('Handle incoming method call from server: '..data.method)
+        local result = nil;
 
         local status, errMsg = pcall( function()
-            if(SBCI.Proxy.__eventHandlers[data.method])then
-                SBCI.Proxy.__eventHandlers[data.method](data.params);
-            else
-                SBCI.print("ERROR calling event: \""..data.method.."\". Exists??");
-            end;
-        end);
+            result = TBS.Proxy.__eventHandlers[data.method](data.params)
+        end)
 
         if status == false then
-            SBCI.print("ERROR: Could not call event handler: "..errMsg, SBCI.colors.RED);
+            TBS.print("ERROR: Could not call event handler: "..errMsg, TBS.colors.RED)
+            return false
+        else
+            if(data['id'])then
+                TBS.Proxy._result(result, data['id']);
+            end;
         end;
-    else
-        --ToDo: Tell server no method.
         return;
-    end;
+
+    elseif data.error ~= nil then
+        -- Handle incoming TC3 RPC error
+        if(data.id ~= nil)then
+            local status, errMsg = pcall(function()
+                TBS.Proxy.__openRpcRequests[data.id].promise:reject(data.error)
+                TBS.Proxy.__openRpcRequests[data.id] = nil
+            end)
+            if not status then
+                TBS.print("Could not reject promise: " .. errMsg)
+            end
+        else
+            TBS.print("@indianRed@Incoming Server Error: @white@"..data.error.code.." - "..data.error.message)
+        end
+    end
 end
 
 
 -- Internal send function. Expects a string for "method", object for "params"
-SBCI.Proxy._request= function(method, params)
-    local msgId = SBCI.Proxy.__msg_id_index
-    SBCI.Proxy.__msg_id_index = SBCI.Proxy.__msg_id_index+1
+TBS.Proxy._request= function(method, params)
+    local msgId = TBS.Proxy.__msg_id_index
+    TBS.Proxy.__msg_id_index = TBS.Proxy.__msg_id_index+1
     local packet = {method = method, params = params, id=msgId}
 
     local promise = Promise.new()
-    SBCI.Proxy.__openRpcRequests[msgId] = {
+    TBS.Proxy.__openRpcRequests[msgId] = {
         timestamp = os.time(),
         promise = promise
     }
 
-    SBCI.debugprint("Sending rpc request: " .. spickle(packet))
-    SBCI.Connection.send(_json.encode(packet) .. "\r\n")
+    TBS.debugprint("Sending rpc request: " .. spickle(packet))
+    TBS.Connection.send(_json.encode(packet) .. "\r\n")
     return promise
 end
 
 -- Internal send function. Expects a string for "method", object for "params"
-SBCI.Proxy._notify= function(method, params)
+TBS.Proxy._notify= function(method, params)
     local packet = {method = method, params = params}
 
-    SBCI.debugprint("Sending rpc notification: " .. spickle(packet))
-    SBCI.Connection.send(_json.encode(packet) .. "\r\n")
+    TBS.debugprint("Sending rpc notification: " .. spickle(packet))
+    TBS.Connection.send(_json.encode(packet) .. "\r\n")
     return
 end
 
-SBCI.Proxy.on = function(method, callback)
-    SBCI.Proxy.__eventHandlers[method] = callback
+-- Interal send function. Expects an object for result, and an int for id/
+TBS.Proxy._result = function(result, id)
+    local packet = {result = result, id = id};
+
+    TBS.debugprint("Sending rpc result: " .. spickle(packet))
+    TBS.Connection.send(_json.encode(packet) .. "\r\n")
+    return
+end;
+
+TBS.Proxy.on = function(method, callback)
+    TBS.Proxy.__eventHandlers[method] = callback
 end
 
-SBCI.Proxy.authenticate = function(username, password, charname, charid, idstring)
-    SBCI.debugprint("authenticate")
+TBS.Proxy.authenticate = function(username, password, idstring)
+    TBS.debugprint("authenticate")
     local params = {
+        version = TBS.Version,
         username = username,
         password = password,
-        guildtag = GetGuildTag(),
-        charname = GetPlayerName(),
+        --guildtag = GetGuildTag(),
+        --charname = GetPlayerName(),
         charid = GetCharacterID(),
         idstring = idstring
     };
 
-    return SBCI.Proxy._request('authenticate', params)
+    return TBS.Proxy._request('authenticate', params)
 end
 
-SBCI.Proxy.logout = function()
-    return SBCI.Proxy._request("logout", {});
+TBS.Proxy.logout = function()
+    return TBS.Proxy._request("logout", {});
 end;
 
 
@@ -116,19 +156,35 @@ end;
 
 
 
---[[SBCI.Proxy.getOnlineUsers = function()
-    return SBCI.Proxy._request("get_online_users", {})
-end]]
+TBS.Proxy.getOnlineUsers = function()
+    return TBS.Proxy._request("get_online_users", {})
+end
 
 -- Get the current logged-in user's roles
---[[SBCI.Proxy.getRoles = function()
-    return SBCI.Proxy._request("get_roles", {})
-end]]
+TBS.Proxy.getRoles = function()
+    return TBS.Proxy._request("get_roles", {})
+end
 
 -- Get all available/possible roles
---[[SBCI.Proxy.getAllRoles = function()
-    return SBCI.Proxy._request("get_all_roles", {})
-end]]
+TBS.Proxy.getAllRoles = function()
+    return TBS.Proxy._request("get_all_roles", {})
+end
+
+-- Get all possible status's.
+TBS.Proxy.getAllStatus = function()
+    local p = Promise.new()
+    TBS.Proxy._request("get_all_status", {}):next(function(stats)
+        local compare = function(a,b)
+            return a[1] > b[1]
+        end
+
+        table.sort(stats, compare)
+        p:resolve(stats);
+    end)
+    return p;
+end
+
+
 
 --[[
     Submit station/item info.
@@ -144,18 +200,18 @@ end]]
            inventory = int,
         }]
 ]]
---[[SBCI.Proxy.__submitStationInfo = function(sectorid, stationid)
+--[[TBS.Proxy.__submitStationInfo = function(sectorid, stationid)
     local sendbuf = {}
     for i=1, 25 do
-        if #SBCI.Proxy.__submitStationInfoBuf <= 0 then
+        if #TBS.Proxy.__submitStationInfoBuf <= 0 then
             break
         end
-        table.insert(sendbuf, table.remove(SBCI.Proxy.__submitStationInfoBuf) )
+        table.insert(sendbuf, table.remove(TBS.Proxy.__submitStationInfoBuf) )
     end
     if #sendbuf == 0 then
-        if SBCI.Proxy.__submitStationInfoPromise then
-            SBCI.Proxy.__submitStationInfoPromise:resolve(true)
-            SBCI.Proxy.__submitStationInfoPromise = nil
+        if TBS.Proxy.__submitStationInfoPromise then
+            TBS.Proxy.__submitStationInfoPromise:resolve(true)
+            TBS.Proxy.__submitStationInfoPromise = nil
         end
         return
     else
@@ -164,46 +220,26 @@ end]]
             stationid = stationid,
             items = sendbuf
         }
-        local p = SBCI.Proxy._request('submit_station_item_info', params)
+        local p = TBS.Proxy._request('submit_station_item_info', params)
         p:next( function(result)
-            SBCI.Proxy.__submitStationInfo(sectorid, stationid)
+            TBS.Proxy.__submitStationInfo(sectorid, stationid)
         end)
     end
 end]]
 
---[[SBCI.Proxy.submitStationInfo = function(sectorid, stationid, items)
-    SBCI.Proxy.__submitStationInfoBuf = items
-    SBCI.Proxy.__submitStationInfo(sectorid, stationid)
+--[[TBS.Proxy.submitStationInfo = function(sectorid, stationid, items)
+    TBS.Proxy.__submitStationInfoBuf = items
+    TBS.Proxy.__submitStationInfo(sectorid, stationid)
     local p = Promise.new()
-    SBCI.Proxy.__submitStationInfoPromise = p
+    TBS.Proxy.__submitStationInfoPromise = p
     return p
 end]]
 
 
 --[[
-playersSpotted()
-Expected params:
-
-    params = {
-        sectorid = int,
-        players = [{
-            name = string (required),
-            id = int (VO id, optional),
-            guildtag = string (optional),
-            shipname = string (optional)
-            faction = int (optional)
-        }, ... ]
-    }
-
-]]
-SBCI.Proxy.playersSpotted = function(params)
-    return SBCI.Proxy._notify('players_spotted', params)
-end
-
---[[
 registerNewUser()
 
-Call this function to begin the process of registering a new user to SBCI.
+Call this function to begin the process of registering a new user to TBS.
 
 Required role privileges: In order to call this function, the caller must be
 one of "Commander", "Lieutenant", or "Engineer" roles. If the user is not in
@@ -222,7 +258,7 @@ Example use case scenario:
     A new member, "UserX", has been accepted as full member into the guild.
     CommanderY manipulates a fancy UI which executes the function
 
-        SBCI.Proxy.registerNewUser("UserX", {"Member"})
+        TBS.Proxy.registerNewUser("UserX", {"Member"})
         :next( function(authcode)
             -- Do something with authcode here
         end)
@@ -231,29 +267,20 @@ Example use case scenario:
 
     UserX then manipulates a fancy UI which runs the function
 
-        SBCI.Proxy.setMemberPassword(desired_password, auth_code_from_CommanderY, maybe_an_email_address)
+        TBS.Proxy.setMemberPassword(desired_password, auth_code_from_CommanderY, maybe_an_email_address)
 
 Note: This function can also be used to reset an existing member's password.
 ]]
 
---[[SBCI.Proxy.registerNewUser = function(name, roles)
+TBS.Proxy.registerNewUser = function(name, roles)
     local params = {
         username = name,
         roles = roles }
-    local p = SBCI.Proxy._request('register_new_user', params)
+    local p = TBS.Proxy._request('register_new_user', params)
         :next(function(result)
             return result.auth_code
         end)
     return p
-end]]
-
-SBCI.Proxy.sendChat = function(msg, sectorid, isemote)
-    local params = {
-        msg = msg,
-        sectorid = sectorid,
-        isemote = isemote
-    }
-    return SBCI.Proxy._notify('send_chat', params)
 end
 
 --[[
@@ -266,7 +293,7 @@ lost password.
 Required role priveleges: None.
 
 Parameters:
-    name : The username of the SBCI account to set up
+    name : The username of the TBS account to set up
     password : The new password
     authCode : The authorization code generated previousy by registerNewUser()
         (See above)
@@ -277,27 +304,29 @@ Parameters:
 Returns:
     true on success
 ]]
---[[SBCI.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
-    local faction = nil
+TBS.Proxy.setMemberPassword = function(name, password, authCode, opt_params)
+    local faction = GetPlayerFaction();
     local email = nil
+
     if opt_params ~= nil then
-        faction = opt_params.faction
         email = opt_params.email
     end
+
     local params = {
         username = name,
         password = password,
-        nonce = authCode,
         email = email,
-        faction = faction
+        faction = faction,
+        nonce = authCode,
+        charID = GetCharacterID()
     }
-    return SBCI.Proxy._request('set_member_password', params)
-end]]
+    return TBS.Proxy._request('set_member_password', params)
+end
 
 --[[
 submitRoidInfo()
 
-Use this function to send asteroid info to the SBCI database
+Use this function to send asteroid info to the TBS database
 
 Paramaters:
     sectorid: The sector ID of the roids being submitted
@@ -316,13 +345,31 @@ Paramaters:
             },
         ]
 ]]
---[[SBCI.Proxy.submitRoidInfo = function(sectorid, roids)
+--[[TBS.Proxy.submitRoidInfo = function(sectorid, roids)
     local params = {
         sectorid = sectorid,
         roids = roids
     }
-    return SBCI.Proxy._notify('submit_roids', params)
+    return TBS.Proxy._notify('submit_roids', params)
 end]]
+
+
+
+
+TBS.Proxy.sendChat = function(msg, sectorid, isemote, ch)
+
+    if(not ch)then ch = 0 end;
+
+    local params = {
+        msg = msg,
+        sectorid = sectorid,
+        isemote = isemote,
+        channel = ch
+    };
+
+    return TBS.Proxy._notify('chat', params)
+end
+
 
 --[[
     Relay chat to RelayServer.
@@ -347,24 +394,79 @@ end]]
     }
     @returns true if relayed, false if failed.
 ]]
-SBCI.Proxy.RelayChat = function(params)
-    return SBCI.Proxy._notify('chat', params)
+TBS.Proxy.RelayChat = function(params)
+    return TBS.Proxy._notify('chat', params)
 end;
-SBCI.Proxy.Relay2Chat = function(params)
-    return SBCI.Proxy._notify('chat2', params)
-end;
-
-SBCI.Proxy.Keys = function(params)
-    SBCI.Proxy._notify("keys", params);
+TBS.Proxy.Relay2Chat = function(params)
+    return TBS.Proxy._notify('chat2', params)
 end;
 
-SBCI.Proxy.Stations = function(_,params)
+TBS.Proxy.Keys = function(params)
+    TBS.Proxy._notify("keys", params);
+end;
+
+TBS.Proxy.Stations = function(_,params)
     local msg = {msg=params.msg};
     if msg == "Your station in Latos I-8 is under attack!" then
-        SBCI.Proxy._notify('station_attack', msg);
+        TBS.Proxy._notify('station_attack', msg);
     elseif msg == "Your station in Bractus M-14 is under attack!" then
-        SBCI.Proxy._notify('station_attack', msg);
+        TBS.Proxy._notify('station_attack', msg);
     elseif msg == "Your station in Pelatus C-12 is under attack!" then
-        SBCI.Proxy._notify('station_attack', msg);
+        TBS.Proxy._notify('station_attack', msg);
    end
+end;
+
+
+TBS.Proxy.GetKoS = function(parmas)
+    if(not params)then
+        return TBS.Proxy._request('KoS', {type='getKoS'});
+    end
+end
+
+
+--[[
+playersSpotted()
+Expected params:
+
+    params = {
+        sectorid = int,
+        players = [{
+            name = string (required),
+            id = int (VO id, optional),
+            guildtag = string (optional),
+            shipname = string (optional)
+            faction = int (optional)
+        }, ... ]
+    }
+
+]]
+TBS.Proxy.playersSpotted = function(params)
+    TBS.Proxy._notify('players_spotted', params)
+    --[[:next(function(kosList) -- kosLis = [{ name=str, faction=int, reason=str }]
+	    if(kosList == false)then return end -- No KoS's were found.
+
+        for _, player in ipairs(kosList) do
+            if(not player['name']) then return end;
+            local faction = "";
+            if(not player['faction'])then
+                faction = TBS.colors.faction[0]
+            else
+                faction = TBS.colors.faction[player['faction']]
+    --[[        end
+
+            TBS.print('@white@The pilot '..faction..player['name']..' @white@is KoS to [214] for: @yellow@'..player['reason']);
+        end
+    end)]]
+end
+
+
+--[[
+    @params = object
+    {
+        hostile: str, --Hostile Name
+        sectorID: int --Sector sos was sent in.
+    }
+]]
+TBS.Proxy.SoS = function(params)
+    return TBS.Proxy._request('sos', params);
 end;

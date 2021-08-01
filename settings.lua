@@ -1,66 +1,60 @@
 --[[
 
 ]]
-SBCI.Settings = SBCI.Settings or {};
-SBCI.Settings.SaveID = 190419041904;
-SBCI.Settings.Data = {};
+TBS.Settings = TBS.Settings or {};
+TBS.Settings.SaveID = 190419041904;
+TBS.Settings.Data = {};
 
 --[[
-	Load or Save SBCI Settings.
+	Load or Save TBS Settings.
 	@param {String} type "Load" or "Save"
 ]]
-SBCI._Settings = function(type)
-    SBCI.print("Running _Settings()", SBCI.colors.YELLOW)
+TBS._Settings = function(type)
+    TBS.print("Running _Settings()", TBS.colors.yellow)
 	if not type then return end --We don't know what we're doing....
 	local promise = Promise.new()
 
     if(type=="load")then
-        SBCI.print("Running _Settings(\"load\")", SBCI.colors.YELLOW)
-        SBCI.Settings.Data = unspickle(LoadSystemNotes(SBCI.Settings.SaveID));
-        --[[if(not SBCI.Settings.Data)then
-            SBCI.debugprint("Settings not found; Creating Settings....");
-            SBCI._Settings("save"):next(function()
-                SBCI._Settings("load");
+        TBS.print("Running _Settings(\"load\")", TBS.colors.yellow)
+        TBS.Settings.Data = unspickle(LoadSystemNotes(TBS.Settings.SaveID));
+        --[[if(not TBS.Settings.Data)then
+            TBS.debugprint("Settings not found; Creating Settings....");
+            TBS._Settings("save"):next(function()
+                TBS._Settings("load");
             end):next(function()
-                SBCI.debugprint("Settings Created!")
+                TBS.debugprint("Settings Created!")
             end);
         end;]]
-        --[[SBCI.print("Running _Settings(\"load\") -- Catches", SBCI.colors.YELLOW)
-        if(not SBCI.Settings.Data)then SBCI.print("NO SETTINGS FOUND",SBCI.colors.RED); end;
-        if(SBCI.Settings.Data==nil)then SBCI.print("NO SETTINGS FOUND2",SBCI.colors.RED); end;
-        SBCI.print("Running _Settings(\"load\") -- promise:resolve()", SBCI.colors.YELLOW)
+        --[[TBS.print("Running _Settings(\"load\") -- Catches", TBS.colors.yellow)
+        if(not TBS.Settings.Data)then TBS.print("NO SETTINGS FOUND",TBS.colors.RED); end;
+        if(TBS.Settings.Data==nil)then TBS.print("NO SETTINGS FOUND2",TBS.colors.RED); end;
+        TBS.print("Running _Settings(\"load\") -- promise:resolve()", TBS.colors.yellow)
 
-        SBCI.print("Running _Settings(\"load\") = \""..spickle(SBCI.Settings.Data).."\"", SBCI.colors.YELLOW)]]
-        SBCI.print("Running _Settings(\"load\") -- promise", SBCI.colors.YELLOW)
-        if(SBCI.Settings.Data == "")then print("AGATW") end;
-        if(SBCI.Settings.Data == nil)then print("affff") end;
-        if(not SBCI.Settings.Data)then print("AGAnoooooTW") end;
-        if(SBCI.Settings.Data)then printtable(SBCI.Settings.Data) end;
-        if(SBCI.Settings.Data)then
-            SBCI.print("Running _Settings(\"load\") -- promise.resolve\n"..spickle(SBCI.Settings.Data), SBCI.colors.GREEN)
+        TBS.print("Running _Settings(\"load\") = \""..spickle(TBS.Settings.Data).."\"", TBS.colors.yellow)]]
+        if(TBS.Settings.Data)then printtable(TBS.Settings.Data) end;
+        if(TBS.Settings.Data)then
             promise:resolve();
         else
-            SBCI.print("Running _Settings(\"load\") -- promise.reject()", SBCI.colors.RED)
             promise.reject();
         end;
 
 		--TCFT2.Settings.Update() ?? ~Spy
 --[[
-		if(SBCI.Settings.Data.SettingsVersion == nil)then
+		if(TBS.Settings.Data.SettingsVersion == nil)then
 			print("Settings Do Not Exist!!")
 
-			SBCI.Settings.Data = SBCI.Settings.Default;
-			SBCI.Settings.Data.SettingsVersion = SBCI.Version;
+			TBS.Settings.Data = TBS.Settings.Default;
+			TBS.Settings.Data.SettingsVersion = TBS.Version;
 
-			SBCI._Settings("save")
+			TBS._Settings("save")
 			--:next(
-				--SBCI._Settings("load")
+				--TBS._Settings("load")
 			--)
 		end;]]
 
-		--[[if(SBCI.Settings.Data.SettingsVersion ~= SBCI.Version)then
-			local Data = SBCI.Settings.Data;
-			for i,v in ipairs(SBCI.Settings.Default) do
+		--[[if(TBS.Settings.Data.SettingsVersion ~= TBS.Version)then
+			local Data = TBS.Settings.Data;
+			for i,v in ipairs(TBS.Settings.Default) do
 				if(i=="SettingsVersion")then return; end; --We're updating settings.
 
 				for ii,vv in ipairs(Data) do
@@ -68,31 +62,26 @@ SBCI._Settings = function(type)
 					Data[i] = v; --Add Setting.
 				end;
 			end;
-			Data.SettingsVersion = SBCI.Version;
+			Data.SettingsVersion = TBS.Version;
 
-			SBCI._Settings("save"):next(SBCI._Settings("load"))
+			TBS._Settings("save"):next(TBS._Settings("load"))
 		end;]]
 
     elseif(type=="save")then
-        SBCI.print("Running _Settings(\"save\")", SBCI.colors.YELLOW)
 
-        SBCI.Settings.Data.Username = SBCI.Settings.st.Username.value or "";
-        SBCI.Settings.Data.Password = SBCI.Settings.st.Password.value or "";
-        SBCI.Settings.Data.AutoLogin = SBCI.Settings.st.AutoLogin.value or "ON";
-        --SBCI.Settings.Data.BroadcastArrival = SBCI.Settings.st.BroadcastArrival.value or "ON";
-        SBCI.Settings.Data.SendLocation = SBCI.Settings.st.SendLocation.value or "ON";
-        --SBCI.Settings.Data.AutoRepair = SBCI.Settings.st.AutoRepair.value or "ON";
-        --SBCI.Settings.Data.AutoReload = SBCI.Settings.st.AutoReload.value or "ON";
-        --SBCI.Settings.Data.Spotter_HUD = SBCI.Settings.st.Spotter_HUD.value or "ON";
+        TBS.Settings.Data.Version = TBS.Version;
+        TBS.Settings.Data.Username = TBS.Settings.st.Username.value or "";
+        TBS.Settings.Data.Password = TBS.Settings.st.Password.value or "";
+        TBS.Settings.Data.AutoLogin = TBS.Settings.st.AutoLogin.value or "ON";
+        TBS.Settings.Data.SendLocation = TBS.Settings.st.SendLocation.value or "ON";
+        TBS.Settings.Data.AutoRepair = TBS.Settings.st.AutoRepair.value or "ON";
+        TBS.Settings.Data.AutoReload = TBS.Settings.st.AutoReload.value or "ON";
+        --TBS.Settings.Data.Spotter_HUD = TBS.Settings.st.Spotter_HUD.value or "ON";
+        TBS.Settings.Data.ShowSpots = TBS.Settings.st.ShowSpots.value or "ON";
 
 
-        SBCI.print("Running _Settings(\"save\") -- saving", SBCI.colors.YELLOW)
-        SBCI.debugprint("Saving Settings:\n"..spickle(SBCI.Settings.Data))
-        --SBCI.debugprint("Saving Settings:\n"..SBCI.Settings.Data)
-        SBCI.print("Running _Settings(\"save\") -- saving()", SBCI.colors.YELLOW)
-        SaveSystemNotes(spickle(SBCI.Settings.Data), SBCI.Settings.SaveID);
-        --SaveSystemNotes(SBCI.Settings.Data, SBCI.Settings.SaveID);
-        SBCI.print("Running _Settings(\"save\") -- saved", SBCI.colors.YELLOW)
+        TBS.debugprint("Saving Settings:\n"..spickle(TBS.Settings.Data))
+        SaveSystemNotes(spickle(TBS.Settings.Data), TBS.Settings.SaveID);
 		--return promise:resolve();
 
     else return; --[[Well... That wasn't a setting....]] end;

@@ -1,39 +1,62 @@
 --[[
-SBCI - General Use "Common"
+TBS - General Use "Common"
 ]]
 
 --General Stuff;
-SBCI.debug = false;
-SBCI.Version = "0.2.0";
-SBCI.IsInitialised = false
+TBS.debug = false;
+TBS.Version = "0.2.5";
+TBS.IsInitialised = false
 
 -- Hex color codes "\127RRGGBB" format
-SBCI.colors = {};
-SBCI.colors.SBCI = "\12700b3b3";
-SBCI.colors.combat = "\127CD5C5C";
-SBCI.colors.YELLOW = "\127FFFF00";
-SBCI.colors.WHITE = "\127FFFFFF";
-SBCI.colors.RED = "\127FF0000";
-
-SBCI.colors.GREEN = "\127008800";
-SBCI.colors.GREEN2 = "\12733CC33";
-SBCI.colors.CHAT_BLUE = "\12728B4F0";
-SBCI.colors.NORMAL = "\127DDDDDD";
-SBCI.colors.ORANGE = "\127AAAA00";
-SBCI.colors.GUILD_ORANGE = "\127ffb935";
-SBCI.colors.INDIAN_RED = "\127CD5C5C";
-SBCI.colors.BLUE = "\1270000FF";
-SBCI.colors.DRK_GREEN = "\127888800";
+TBS.colors = {};
+TBS.colors.TBS = "\12700b3b3";
+TBS.colors.combat = "\127CD5C5C";
+TBS.colors.green = "\127008800";
+TBS.colors.indianRed = "\127CD5C5C";
+TBS.colors.white = "\127FFFFFF";
+TBS.colors.yellow = "\127FFFF00";
 
 
-SBCI.colors.faction = {};
-SBCI.colors.faction[0] = "\127808080"; --Grey
-SBCI.colors.faction[1] = "\1276080FF"; --Itani
-SBCI.colors.faction[2] = "\127FF2020"; --Serco
-SBCI.colors.faction[3] = "\127C0C000"; --UIT
+
+TBS.colors.RED = "\127FF0000";
+TBS.colors.green2 = "\12733CC33";
+TBS.colors.lime = "\12788FF88";
+TBS.colors.CHAT_BLUE = "\12728B4F0";
+TBS.colors.normal = "\127DDDDDD";
+TBS.colors.ORANGE = "\127AAAA00";
+TBS.colors.guildOrange = "\127ffb935";
+TBS.colors.BLUE = "\1270000FF";
+TBS.colors.darkGreen = "\127888800";
 
 
-SBCI.SystemNames_ = {
+TBS.colors.faction = {};
+TBS.colors.faction[0] = "\127808080"; --Grey
+TBS.colors.faction[1] = "\1276080FF"; --Itani
+TBS.colors.faction[2] = "\127FF2020"; --Serco
+TBS.colors.faction[3] = "\127C0C000"; --UIT
+
+TBS.channels = {};
+TBS.channels[0] = "";
+TBS.channels[1] = "(Council) ";
+TBS.channels[2] = "(Officer) ";
+
+TBS.colors.channels = {};
+TBS.colors.channels[0] = TBS.colors.TBS;
+TBS.colors.channels[1] = TBS.colors.TBS;
+TBS.colors.channels[2] = TBS.colors.TBS;
+
+TBS.standings = {};
+TBS.colors.radar = {};
+TBS.colors.standings = {};
+
+local colour_delimiter = "@"
+TBS.colour_codes = {}
+for k,v in pairs(TBS.colors) do
+    TBS.colour_codes[colour_delimiter..k..colour_delimiter] = v
+end
+
+
+TBS.SystemNames_ = {
 	{1,"Sol II",2},
 	{2,"Betheshee",2},
 	{3,"Geira Rutilus",2},
@@ -66,10 +89,9 @@ SBCI.SystemNames_ = {
 	{30,"Dantia",2},
 	{31,"Devlopia",0},
 	{32,"nil",0},
-	{33,"Infernus",0},
-	{34,"Devlopia",0},
-	{35,"NilSystem",0},
-	{36,"Unknown System",0},
+	{33,"Infernus",0}
 };
 
-SBCI.Roles = ""; --Roles given by server.
+TBS.Roles = ""; --Roles given by server.
+TBS.lastTimeShot = 0;
+TBS.__PlayersInSector = TBS.__PlayersInSector or {};
