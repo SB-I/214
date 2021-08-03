@@ -81,16 +81,10 @@ TBS.Connection._Connect = function()
     if(not password)then TBS.print("No Password! \"/tbs settings\"", TBS.colors.RED); end;
     if(not username) or (not password)then return end; --No Creds...
 
-    local dpasswd = gkini.ReadString("SpyaBeje Industries","idstring" ,"None")
-    if ((dpasswd == "None") or (string.len(dpasswd) < 64)) then
-        dpasswd = TBS.RandomString(64)
-        gkini.WriteString("SpyaBeje Industries", "idstring", dpasswd);
-    end;
-
     TBS.print("Connecting to TBS server...", TBS.colors.normal);
     TBS.Connection.connect()
     :next( function()--Once we've connected, Authenticate.
-        return TBS.Proxy.authenticate(username, password, dpasswd)
+        return TBS.Proxy.authenticate(username, password)
     end):next( function(data)--{roles:<Array>, onlineUsers:str}
         if(data and not data.error)then
             TBS.print(TBS.colors.TBS.."Authenticated.")

@@ -132,7 +132,7 @@ TBS.Proxy.on = function(method, callback)
     TBS.Proxy.__eventHandlers[method] = callback
 end
 
-TBS.Proxy.authenticate = function(username, password, idstring)
+TBS.Proxy.authenticate = function(username, password)
     TBS.debugprint("authenticate")
     local params = {
         version = TBS.Version,
@@ -140,8 +140,7 @@ TBS.Proxy.authenticate = function(username, password, idstring)
         password = password,
         --guildtag = GetGuildTag(),
         --charname = GetPlayerName(),
-        charid = GetCharacterID(),
-        idstring = idstring
+        charid = GetCharacterID()
     };
 
     return TBS.Proxy._request('authenticate', params)
