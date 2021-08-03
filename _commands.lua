@@ -174,3 +174,11 @@ TBS.newCliCommand({'sos'},
     end,
     "Send an SoS to discord!! (Not a garuntee for help)"
 )
+
+
+TBS.newCliCommand({'status'},
+    function(args)
+        TBS.UIStatus:showDialog();
+    end,
+    "Add or update a status."
+)
