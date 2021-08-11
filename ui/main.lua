@@ -62,8 +62,13 @@ TBS.UI.Main_Buttons.connect = iup.stationbutton {
     title = "Connect",
     size = TBS.UI.Main_Buttons.size,
     action = function()
-        print("tbs.button['connect']")
-        HideDialog(TBS.UI.MainWindow)
+        print("tbs.button['connect']");
+        
+        if(not TBS.Connection.isConnected)then
+            TBS.Connection._Connect();
+        else
+            TBS.Connection.CleanUp() --close connection.
+        end;
     end,
 };
 
