@@ -49,7 +49,7 @@ TBS.TBSSay = function(data,args)
 end
 
 TBS.CleanUp = function() --(!) Interface unloading -- opposite of "PLAYER_ENTERED_GAME";
-	TBS.Connection.CleanUp()
+	return TBS.Connection.CleanUp()
 end
 
 --[[
@@ -112,14 +112,27 @@ end
 -- Player enters game
 TBS.EventPlayerEnteredGame = function(_, params)
 	if(TBS.IsInitialised)then return end; --Already Init'd....
-
 	--SetShipPurchaseColor(229) --TGFT Green.
+
+	--local preLoad = Timer();
+	--preLoad:SetTimeout(500, function() print("Pre-Load") end)
+
 
 	-- Load our settings and login if AutoConnect is ON.
 	TBS._Settings("load"):next(function()
-		if(TBS.Settings.Data.AutoLogin=="ON")then
-			TBS.Connection._Connect()
-		end;
+		--[[if(TBS.Settings.Data.AutoLogin=="ON")then
+			TBS.print("Auto-Connect=ON\n   RUNNING TIMERS");
+
+			local afterLoad = Timer();
+			afterLoad:SetTimeout(500, function()
+				TBS.print("After Load")
+			end)
+
+			--autoConnect:SetTimeout(5000, function()
+			--	TBS.print("TIMER.EXECUTE() -> CONNECT CONNECT CONNECT")
+			--	TBS.Connection._Connect()
+			--end);
+		end;]]
 	end);
 
 	TBS.IsInitialised = true

@@ -8,7 +8,7 @@ TBS.Connection = {}
 
 TBS.Connection.isConnected = false
 TBS.Connection.server = '73.12.155.103'--73.12.155.103 --25.27.158.232
-TBS.Connection.port = '27480' --27480 --15220
+TBS.Connection.port = '27320' --27480 --15220
 
 -- Connect to the TBS server. This function does not perform authentication;
 -- only connecting to the TCP socket.
@@ -67,6 +67,10 @@ TBS.Connection.CleanUp = function()
         --TBS.Proxy.logout();
         TBS.Connection.socket.tcp:Disconnect()
         TBS.Connection.isConnected = false
+
+        return Promise.resolve(true)
+    else
+        return Promise.resolve(true)
     end
 end
 
