@@ -1,6 +1,12 @@
 #Changelog
 
-0.2.6 -- In progress
+0.2.6a -- # Visual Aide (Prototype)
+• Port Change
+• UI Creations.
+•• Created a prototype UI (Viewable with /tbs)
+•• Linked "settings" to the prototype UI.
+•• Linked "register user" to the prototype UI.
+•• Linked "Status Updater" to the prototype UI.
 
 
 v.0.2.5 -- # Combat Maintnance
@@ -16,7 +22,6 @@ v.0.2.5 -- # Combat Maintnance
 • Added SoS feature (/sos) which notifies connected clients and Discord clients of an emergancy!!
 • Now Cache's players and their status's. (This helps visually when targetting a player.)
 •• Displays the pilots status as a SecondaryHUDMessage.
-• Port Change
 
 
 v.0.2.4 -- # SaltedHashes
