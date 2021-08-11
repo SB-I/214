@@ -1,5 +1,5 @@
 
-TBS.UI = {}
+TBS.UI = TBS.UI or {}
 
 TBS.UI.createOkCancelDialog = function(header, childContents, onOk, onCancel)
     if(header)then

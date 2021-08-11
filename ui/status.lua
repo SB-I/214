@@ -80,8 +80,10 @@ function TBS.UIStatus:createUI()
                 end)]]
             end,
             function()
-                TBS.debugprint('Dialog Cancelled.')
+                TBS.debugprint('Dialog Cancelled.');
+                TBS.print("@yellow@Tap the [x] to ensure Settings closes!!!");
                 HideDialog(dialog)
+                ShowDialog(TBS.UI.MainWindow);
             end
         )
         p:resolve(dialog)

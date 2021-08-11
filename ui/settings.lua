@@ -65,7 +65,9 @@ function TBS.UISettings:createUI()
 
         function() --"CANCEL"
             TBS.debugprint("SettingsDialog: Cancel...");
-            HideDialog(dialog);
+            TBS.print("@yellow@Tap the [x] to ensure Settings closes!!!");
+            --HideDialog(dialog);
+            ShowDialog(TBS.UI.MainWindow)
         end
 
     );--dialog = CreateDialog;

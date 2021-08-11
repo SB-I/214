@@ -69,7 +69,9 @@ function TBS.UIRegisterUser:createUI()
             end,
             function()
                 TBS.debugprint('Dialog Cancelled.')
+                TBS.print("@yellow@Tap the [x] to ensure Settings closes!!!");
                 HideDialog(dialog)
+                ShowDialog(TBS.UI.MainWindow);
             end
             )
         p:resolve(dialog)

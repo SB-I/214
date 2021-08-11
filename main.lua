@@ -124,8 +124,7 @@ TBS.cli = function(_,args)
         TBS.print("No such command: "..args[1])
         TBS.printCliHelp()
     else
-        TBS.printCliHelp()
-        --TBS.UI.DisplayTBS(); --Opens TBS UI Window. (in beta stage, use "/tc3 ui")
+        TBS.UI.Show_MainWindow();
     end
 end
 
